@@ -1,0 +1,80 @@
+---
+- hosts: servers
+  vars_files:
+    - vars.yml
+  gather_facts: true
+  sudo: true
+
+  tasks:
+  - name: Generate locales
+    shell: locale-gen "en_GB.UTF-8"
+    sudo: true
+
+  - name: Reconfigure locales
+    shell: dpkg-reconfigure locales
+    sudo: true
+
+  - name: Create the project directory.
+    file: state=directory path={{ project_root }}
+
+  - name: Create user.
+    user: home={{ project_root }}/home/ name={{ project_name }} state=present
+
+  - name: Update the project directory.
+    file: group={{ project_name }} owner={{ project_name }} mode=755 state=directory path={{ project_root }}
+
+  - name: Create the code directory.
+    file: group={{ project_name }} owner={{ project_name }} mode=755 state=directory path={{ project_root }}/code/
+
+  - name: Install required system packages.
+    apt: pkg={{ item }} state=installed update-cache=yes
+    with_items: "{{ system_packages }}"
+
+  - name: Install required Python packages.
+    easy_install: name={{ item }}
+    with_items: "{{ python_packages }}"
+
+  - name: Change permissions.
+    shell: chown -R {{ project_name }}:{{ project_name }} {{ project_root }}
+
+  - name: Install nginx configuration file.
+    template: src=files/conf/nginx.conf dest=/etc/nginx/sites-enabled/{{ project_name }}
+    notify: restart nginx
+
+  - name: Install postgres_hba configuration file.
+    template: src=files/conf/pg_hba.conf dest=/etc/postgresql/9.3/main/pg_hba.conf
+  - name: restart postgres
+    service: name=postgresql state=restarted
+
+  - name: Install init scripts.
+    template: src=files/init/{{ item }}.conf dest=/etc/init/{{ project_name }}_{{ item }}.conf
+    with_items: "{{ initfiles }}"
+
+  - name: Create user.
+    postgresql_user:
+      name: "{{project_name}}"
+      role_attr_flags: "CREATEDB,SUPERUSER"
+
+  - name: Create database.
+    postgresql_db:
+      name: "{{project_name}}"
+
+  - name: Install gunicorn
+    pip: name="gunicorn" chdir="{{ project_root }}/code/" virtualenv={{ project_root }}/env/
+
+
+  handlers:
+    - include: handlers.yml
+
+- include: deploy.yml
+
+- hosts: servers
+  vars_files:
+    - vars.yml
+  gather_facts: true
+  sudo: true
+
+  tasks:
+  - name: Restart services.
+    service: name={{ project_name }}_{{ item }} state=restarted
+    with_items: "{{ initfiles }}"

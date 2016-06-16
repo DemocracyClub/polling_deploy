@@ -1,0 +1,8 @@
+[remote:children]
+production
+
+[servers:children]
+production
+
+[production]
+polling_tmp nickname=production vm=0 branch=master domain=wheredoivote.co.uk

@@ -1,0 +1,47 @@
+---
+project_name: polling_stations
+project_root: /var/www/polling_stations
+app_name: polling_stations
+django_media_path: polling_stations
+django_media_root: /var/www/polling_stations-media/media_root
+project_repo: https://github.com/DemocracyClub/UK-Polling-Stations.git
+domains:
+    - wheredoivote.co.uk
+    - www.wheredoivote.co.uk
+    - pollingstations.democracyclub.org.uk
+    - wheredoivote.wales
+    - wheredoivote.cymru
+    - bleibleidleisio.wales
+    - bleibleidleisio.cymru
+system_packages:
+  - build-essential
+  - bundler
+  - curl
+  - gettext
+  - git
+  - libevent-dev
+  - libffi-dev
+  - libjpeg-dev
+  - libpq-dev
+  - libssl-dev
+  - libxml2-dev
+  - libxslt-dev
+  - nginx
+  - opencv-data
+  - postfix
+  - postgresql
+  - postgresql-9.3-postgis-2.1
+  - postgresql-client
+  - postgresql-contrib-9.3
+  - postgresql-server-dev-all
+  - python3-dev
+  - python-psycopg2
+  - python-setuptools
+  - python-virtualenv
+  - redis-server
+
+python_packages:
+  - pip
+  - virtualenv
+initfiles:
+  - gunicorn

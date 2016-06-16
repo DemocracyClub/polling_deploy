@@ -1,0 +1,43 @@
+---
+- hosts: servers
+  vars_files:
+    - vars.yml
+  gather_facts: true
+  sudo: true
+  sudo_user: "{{ project_name }}"
+
+  tasks:
+  - name: Pull sources from the repository.
+    git:
+      repo: "{{ project_repo }}"
+      dest: "{{ project_root }}/code/"
+      version: "{{ branch }}"
+      accept_hostkey: true
+    notify:
+      - restart web frontend
+
+  - name: Upload configuration.
+    template: src=webapp_settings/{{ nickname }}.py dest={{ project_root }}/code/{{ app_name }}/settings/local.py
+
+  - name: Upgrade the virtualenv.
+    pip: requirements={{ project_root }}/code/requirements.txt virtualenv={{ project_root }}/env virtualenv_python="python3"
+
+  - name: Install SASS
+    gem: name=sass version=3.4.21 state=present user_install=false
+    environment:
+      GEM_HOME: "{{ project_root }}/gems"
+
+  - name: Migrate Django database.
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py migrate --noinput"
+
+  - name: Generate Django media.
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py collectstatic --noinput"
+    environment:
+     GEM_HOME: "{{ project_root }}/gems"
+     PATH: "{{ project_root }}/gems/bin:{{ ansible_env.PATH }}"
+
+  - name: Compile all translations from .po files into .mo files
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py compilemessages"
+
+  handlers:
+    - include: handlers.yml
