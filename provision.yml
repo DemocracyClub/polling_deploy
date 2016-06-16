@@ -3,16 +3,14 @@
   vars_files:
     - vars.yml
   gather_facts: true
-  sudo: true
+  become: true
 
   tasks:
   - name: Generate locales
     shell: locale-gen "en_GB.UTF-8"
-    sudo: true
 
   - name: Reconfigure locales
     shell: dpkg-reconfigure locales
-    sudo: true
 
   - name: Create the project directory.
     file: state=directory path={{ project_root }}
@@ -72,7 +70,7 @@
   vars_files:
     - vars.yml
   gather_facts: true
-  sudo: true
+  become: true
 
   tasks:
   - name: Restart services.

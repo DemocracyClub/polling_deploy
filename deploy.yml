@@ -3,8 +3,8 @@
   vars_files:
     - vars.yml
   gather_facts: true
-  sudo: true
-  sudo_user: "{{ project_name }}"
+  become: true
+  become_user: "{{ project_name }}"
 
   tasks:
   - name: Pull sources from the repository.
