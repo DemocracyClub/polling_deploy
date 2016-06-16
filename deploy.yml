@@ -20,7 +20,7 @@
     template: src=webapp_settings/{{ nickname }}.py dest={{ project_root }}/code/{{ app_name }}/settings/local.py
 
   - name: Upgrade the virtualenv.
-    pip: requirements={{ project_root }}/code/requirements.txt virtualenv={{ project_root }}/env virtualenv_python="python3"
+    pip: requirements={{ project_root }}/code/requirements/production.txt virtualenv={{ project_root }}/env virtualenv_python="python3"
 
   - name: Install SASS
     gem: name=sass version=3.4.21 state=present user_install=false

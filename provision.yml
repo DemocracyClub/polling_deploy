@@ -57,10 +57,6 @@
     postgresql_db:
       name: "{{project_name}}"
 
-  - name: Install gunicorn
-    pip: name="gunicorn" chdir="{{ project_root }}/code/" virtualenv={{ project_root }}/env/
-
-
   handlers:
     - include: handlers.yml
 
