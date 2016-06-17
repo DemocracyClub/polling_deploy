@@ -39,6 +39,7 @@ system_packages:
   - python-setuptools
   - python-virtualenv
   - redis-server
+  - acl
 
 python_packages:
   - pip
