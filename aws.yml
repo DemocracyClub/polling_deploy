@@ -1,0 +1,116 @@
+---
+# To use:
+# On any change to Launch Config (instance size, spot price, userdata) you will
+# need to incremenet the number in the vars below
+#
+# Then run
+#
+#     AWS_PROFILE=democlub ansible-playbook aws.yml -e replace_all=True
+#
+# This will create a new launch config, associated the ASG with it, and then
+# delete the old one. If `replace_all` is set then it will also cycle all the
+# old instances (1 by 1) to make them use new ones.
+- hosts: 127.0.0.1
+  connection: local
+  vars:
+    region: "{{ lookup('env', 'AWS_REGION') or 'eu-west-1' }}"
+    ami_id: ami-6cf26c1f
+    vpc_ids:
+      # The default VPC
+      eu-west-1: vpc-e2c30986
+
+    lc_num: 6
+    old_lc_num: "{{ lc_num - 1 }}"
+    aws_env: "{{ lookup('env', 'ENVIRONMENT') or 'test' }}"
+
+  environment:
+    AWS_REGION: "{{ region }}"
+  tasks:
+    - ec2_vpc_subnet_facts:
+        filters:
+          vpc-id: "{{ vpc_ids[region] }}"
+      register: subnets
+
+    - name: ELB security group
+      ec2_group:
+        name: "pollingstations-elb-{{ aws_env }}"
+        description: "ELB http security group"
+        vpc_id: "{{ vpc_ids[region] }}"
+        rules:
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: 0.0.0.0/0
+      register: sg_elb
+
+    - name: Instance Security Group
+      ec2_group:
+        name: "pollingstations-asg-{{ aws_env }}"
+        description: "Allow access for SSH and HTTP from the ELB"
+        vpc_id: "{{ vpc_ids[region] }}"
+        rules:
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            group_id: "{{ sg_elb.group_id }}"
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 217.169.25.231/32
+      register: sg_instance
+
+    # this will fail first time becasue we're not adding any instances to it :(
+    - name: Elastic Load Balancer
+      ec2_elb_lb:
+        name: "pollingstations-{{ aws_env }}"
+        state: present
+        security_group_ids: "{{ sg_elb.group_id }}"
+        listeners:
+          - protocol: http
+            load_balancer_port: 80
+            instance_port: 80
+        health_check:
+          ping_protocol: http
+          ping_port: 80
+          ping_path: "/"
+          response_timeout: 2
+          interval: 15
+          unhealthy_threshold: 2
+          healthy_threshold: 3
+        subnets: "{{ subnets.subnets | map(attribute='id') |list }}"
+      register: elb_result
+
+    - name: Current launchconfig
+      ec2_lc:
+        name: "spotprice-pollingstations_{{ aws_env }}-{{ lc_num }}"
+        assign_public_ip: yes
+        image_id: "{{ ami_id }}"
+        instance_type: m3.medium
+        security_groups: ["{{ sg_instance.group_id }}"]
+        spot_price: "0.073"
+        user_data: "{{lookup('file', 'userdata.yml') }}"
+      register: launchconfig
+
+    - name: Autoscailing group
+      ec2_asg:
+        name: "spotprice-pollingstations-asg-{{ aws_env }}"
+        state: present
+        tags:
+          - Env: "{{ aws_env }}"
+            Name: pollingstations-asg
+        launch_config_name: "{{launchconfig.name}}"
+        load_balancers:
+          - "{{ elb_result.elb.name }}"
+        replace_all_instances: "{{ replace_all|default(False) }}"
+        min_size: 0
+        max_size: 10
+        desired_capacity: 1
+        # Yes, subnets go in vpc_zone_identifier. Blame Garethr.
+        vpc_zone_identifier: "{{ subnets.subnets | map(attribute='id') |list }}"
+        # Wait for this long to replace old instances
+        wait_timeout: 600
+
+    - name: Delete old unused Launch Configs
+      ec2_lc:
+        name: "spotprice-pollingstations_{{ old_lc_num }}"
+        state: absent
