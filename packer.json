@@ -1,0 +1,44 @@
+{
+  "description": "Builds UK Polling Station golden image",
+  "variables": {
+    "build_region": "eu-west-1",
+    "regions_to_copy_to": "eu-central-1"
+  },
+  "builders": [
+    {
+      "name": "server",
+      "type": "amazon-ebs",
+      "ami_name": "ukpollingstations {{isotime |clean_ami_name }}",
+      "ami_regions":"{{user `regions_to_copy_to` }}",
+      "iam_instance_profile": "arn:aws:iam::225244788755:instance-profile/packer-ami-builder",
+      "instance_type":"t2.micro",
+      "region": "eu-west-1",
+      "region":"{{user `build_region` }}",
+      "source_ami": "Comment: ubuntu 14.04 hvm:ebs-ssd 20160602",
+      "source_ami": "ami-8328bbf0",
+      "ssh_username": "ubuntu",
+      "tags": {
+        "build_date":"{{isotime}}"
+      },
+      "run_tags": {
+        "Name": "packer-ami-build"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "./provision.yml",
+      "groups":["production", "servers", "remote"],
+      "extra_arguments": [
+        "--extra-vars", "nickname=production packer=1"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "rm -rf /var/log/cloud-init*.log /home/ubuntu/.ssh/authorized_keys"
+      ]
+    }
+  ]
+}
