@@ -1,17 +1,16 @@
 ---
 - name: restart nginx
   service: name=nginx state=restarted
-  sudo_user: root
+  become: True
 
 - name: reload nginx
   service: name=nginx state=reloaded
-  sudo_user: root
+  become: True
 
 - name: restart web frontend
   action: service name={{ project_name }}_gunicorn state=restarted
-  sudo_user: root
+  become: True
 
 - name: restart postgres
   service: name=postgresql state=restart
-  sudo_user: root
-  
+  become: True

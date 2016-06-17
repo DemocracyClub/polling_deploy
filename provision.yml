@@ -3,16 +3,20 @@
   vars_files:
     - vars.yml
   gather_facts: true
-  sudo: true
+  become: true
 
   tasks:
+  # When building an AMI make sure that we update to the latest of all packages
+  # installed in the base image
+  - name: Update all packages
+    apt: upgrade=safe
+    when: packer is defined
+
   - name: Generate locales
     shell: locale-gen "en_GB.UTF-8"
-    sudo: true
 
   - name: Reconfigure locales
     shell: dpkg-reconfigure locales
-    sudo: true
 
   - name: Create the project directory.
     file: state=directory path={{ project_root }}
@@ -59,10 +63,6 @@
     postgresql_db:
       name: "{{project_name}}"
 
-  - name: Install gunicorn
-    pip: name="gunicorn" chdir="{{ project_root }}/code/" virtualenv={{ project_root }}/env/
-
-
   handlers:
     - include: handlers.yml
 
@@ -72,7 +72,7 @@
   vars_files:
     - vars.yml
   gather_facts: true
-  sudo: true
+  become: true
 
   tasks:
   - name: Restart services.

@@ -1,0 +1,30 @@
+---
+# Create the AWS object (roles, policies) needed to build packer.
+# 
+# This probably doesn't need to be run again, it's just recorded for posterity
+# on how I makde the roles.
+- hosts: 127.0.0.1
+  connection: local
+  vars:
+    region: "{{ lookup('env', 'AWS_REGION') or 'eu-west-1' }}"
+  environment:
+    AWS_REGION: "{{ region }}"
+  tasks:
+    # Create a bucket where we put things that packer will pull down at build time
+    - name: Packer assets bucker
+      s3_bucket:
+        name: pollingstaions-packer-assets
+      register: s3_bucket
+
+    - iam:
+        name: packer-ami-builder
+        iam_type: role
+        state: present
+      register: iam_role
+    - iam_policy:
+        state: present
+        iam_type: role
+        iam_name: packer-ami-builder
+        policy_name: "packager-ami-builder-policy"
+        policy_document: "iam_policies/packer-ami-builder.json"
+      register: iam_policy
