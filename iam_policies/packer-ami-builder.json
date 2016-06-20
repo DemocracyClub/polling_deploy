@@ -2,12 +2,14 @@
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "Stmt1466156024000",
-            "Effect": "Allow",
+            "Sid": "Stmt1466421705316",
             "Action": [
-                "s3:GetObject"
+                "s3:GetObject",
+                "s3:ListBucket"
             ],
+            "Effect": "Allow",
             "Resource": [
+                "arn:aws:s3:::pollingstations-packer-assets",
                 "arn:aws:s3:::pollingstations-packer-assets/*"
             ]
         }

@@ -14,12 +14,12 @@
   connection: local
   vars:
     region: "{{ lookup('env', 'AWS_REGION') or 'eu-west-1' }}"
-    ami_id: ami-6cf26c1f
+    ami_id: ami-2ea53c5d
     vpc_ids:
       # The default VPC
       eu-west-1: vpc-e2c30986
 
-    lc_num: 6
+    lc_num: 7
     old_lc_num: "{{ lc_num - 1 }}"
     aws_env: "{{ lookup('env', 'ENVIRONMENT') or 'test' }}"
 

@@ -11,9 +11,9 @@
     AWS_REGION: "{{ region }}"
   tasks:
     # Create a bucket where we put things that packer will pull down at build time
-    - name: Packer assets bucker
+    - name: Packer assets bucket
       s3_bucket:
-        name: pollingstaions-packer-assets
+        name: pollingstations-packer-assets
       register: s3_bucket
 
     - iam:

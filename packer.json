@@ -2,7 +2,8 @@
   "description": "Builds UK Polling Station golden image",
   "variables": {
     "build_region": "eu-west-1",
-    "regions_to_copy_to": "eu-central-1"
+    "regions_to_copy_to": "eu-central-1",
+    "branch": "master"
   },
   "builders": [
     {
@@ -10,8 +11,37 @@
       "type": "amazon-ebs",
       "ami_name": "ukpollingstations {{isotime |clean_ami_name }}",
       "ami_regions":"{{user `regions_to_copy_to` }}",
-      "iam_instance_profile": "arn:aws:iam::225244788755:instance-profile/packer-ami-builder",
-      "instance_type":"t2.micro",
+      "associate_public_ip_address": true,
+      "iam_instance_profile": "packer-ami-builder",
+      "instance_type":"m4.large",
+      "region": "eu-west-1",
+      "region":"{{user `build_region` }}",
+      "source_ami": "{{user `database_ami_id`}}",
+      "spot_price": "0.05",
+      "ssh_username": "ubuntu",
+      "tags": {
+        "build_date":"{{isotime}}"
+      },
+      "run_tags": {
+        "Name": "packer-ami-build"
+      }
+    },
+    {
+      "name": "database",
+      "type": "amazon-ebs",
+      "ami_name": "addressbase {{isotime |clean_ami_name }}",
+      "associate_public_ip_address": true,
+      "iam_instance_profile": "packer-ami-builder",
+      "instance_type":"m4.large",
+      "spot_price": "0.05",
+      "launch_block_device_mappings": [
+          {
+              "device_name": "/dev/sda1",
+              "delete_on_termination": true,
+              "volume_size": "20",
+              "volume_type": "gp2"
+          }
+      ],
       "region": "eu-west-1",
       "region":"{{user `build_region` }}",
       "source_ami": "Comment: ubuntu 14.04 hvm:ebs-ssd 20160602",
@@ -28,16 +58,47 @@
   "provisioners": [
     {
       "type": "ansible",
+      "only": ["server"],
       "playbook_file": "./provision.yml",
       "groups":["production", "servers", "remote"],
       "extra_arguments": [
-        "--extra-vars", "nickname=production packer=1"
+        "--extra-vars", "nickname=production packer=1 branch={{user `branch`}}"
       ]
     },
     {
       "type": "shell",
+      "only": ["server"],
       "inline": [
-        "rm -rf /var/log/cloud-init*.log /home/ubuntu/.ssh/authorized_keys"
+        "sudo rm -rf /var/log/cloud-init*.log /home/ubuntu/.ssh/authorized_keys"
+      ]
+    },
+    { "type": "ansible",
+      "only": ["database"],
+      "playbook_file": "./provision.yml",
+      "groups":["production", "servers", "remote"],
+      "extra_arguments": [
+        "--extra-vars", "nickname=production packer=1 branch=master",
+        "--skip-tags", "deploy"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["database"],
+      "inline": [
+        "/usr/local/bin/aws s3 --region={{ user `build_region` }} cp s3://pollingstations-packer-assets/addressbase/addressbase.sql.tar /tmp/",
+        "/usr/local/bin/aws s3 --region={{ user `build_region` }} cp s3://pollingstations-packer-assets/addressbase/addressbase_migrations.sql /tmp/",
+        "sudo -u postgres psql  polling_stations -c 'CREATE EXTENSION IF NOT EXISTS postgis;'",
+        "cat /tmp/addressbase_migrations.sql | time sudo -u postgres psql polling_stations",
+        "time sudo -u postgres pg_restore -d polling_stations --no-owner /tmp/addressbase.sql.tar",
+        "sudo rm -rf /var/log/cloud-init*.log /home/ubuntu/.ssh/authorized_keys /tmp/addressbase*"
+      ]
+    },
+    { "type": "ansible",
+      "only": ["database"],
+      "playbook_file": "./deploy.yml",
+      "groups":["production", "servers", "remote"],
+      "extra_arguments": [
+        "--extra-vars", "nickname=production packer=1 branch=master"
       ]
     }
   ]

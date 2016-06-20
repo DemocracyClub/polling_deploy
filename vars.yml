@@ -44,5 +44,6 @@ system_packages:
 python_packages:
   - pip
   - virtualenv
+  - awscli
 initfiles:
   - gunicorn
