@@ -12,6 +12,21 @@
                 "arn:aws:s3:::pollingstations-packer-assets",
                 "arn:aws:s3:::pollingstations-packer-assets/*"
             ]
+        },
+        {
+            "Sid": "StaticAssetS3Sync",
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectAcl",
+                "s3:PutObject",
+                "s3:PutObjectAcl",
+                "s3:ListBucket"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:s3:::pollingstations-assets",
+                "arn:aws:s3:::pollingstations-assets/*"
+            ]
         }
     ]
 }

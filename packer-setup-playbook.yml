@@ -16,6 +16,11 @@
         name: pollingstations-packer-assets
       register: s3_bucket
 
+    - name: App assets bucket
+      s3_bucket:
+        name: pollingstations-assets
+      register: s3_bucket
+
     - iam:
         name: packer-ami-builder
         iam_type: role
