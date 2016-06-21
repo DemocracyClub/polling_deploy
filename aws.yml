@@ -14,10 +14,16 @@
   connection: local
   vars:
     region: "{{ lookup('env', 'AWS_REGION') or 'eu-west-1' }}"
-    ami_id: ami-2ea53c5d
-    vpc_ids:
-      # The default VPC
-      eu-west-1: vpc-e2c30986
+    regions:
+      eu-west-1:
+        ami_id: ami-2ea53c5d
+        # The default VPC
+        vpc_id: vpc-e2c30986
+      eu-central-1:
+        ami_id: ami-f5f8109a
+        vpc_id: vpc-1e467077
+    vpc_id: "{{ regions[region].vpc_id }}"
+    ami_id: "{{ regions[region].ami_id }}"
 
     lc_num: 7
     old_lc_num: "{{ lc_num - 1 }}"
@@ -28,14 +34,14 @@
   tasks:
     - ec2_vpc_subnet_facts:
         filters:
-          vpc-id: "{{ vpc_ids[region] }}"
+          vpc-id: "{{ vpc_id }}"
       register: subnets
 
     - name: ELB security group
       ec2_group:
         name: "pollingstations-elb-{{ aws_env }}"
         description: "ELB http security group"
-        vpc_id: "{{ vpc_ids[region] }}"
+        vpc_id: "{{ vpc_id }}"
         rules:
           - proto: tcp
             from_port: 80
@@ -47,7 +53,7 @@
       ec2_group:
         name: "pollingstations-asg-{{ aws_env }}"
         description: "Allow access for SSH and HTTP from the ELB"
-        vpc_id: "{{ vpc_ids[region] }}"
+        vpc_id: "{{ vpc_id }}"
         rules:
           - proto: tcp
             from_port: 80
