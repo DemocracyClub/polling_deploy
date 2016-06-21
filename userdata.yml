@@ -1,0 +1,22 @@
+#cloud-config
+users:
+  - name: ash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh-authorized-keys:
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGW/naRMsIA2ElpAnSHxTyvo0PeskcmktcL0U1s2CRkJ ash@democlub-june2016"
+  - name: sym
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh-authorized-keys:
+      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC8BLM9LJVAdGFQYUeMvZ56Ll3sWUoPp3p+1zvIaqg73tn470fTgiQ6MOS/cKjbZqcN242H1Ih+oUDAkbMky2ks/9HaxAgxHsYoRBcSmeafq6x0JLhom72j5LC2zChMeyGLpt/6OfacPPL8z"
+
+# These are run one per instance lifetime, not once per boot
+runcmd:
+  - |
+    set -x
+    mount | grep -q /mnt && \
+    service postgresql stop && service nginx stop && \
+    rsync  -a  /var/lib/postgresql/9.3/main/  /mnt/postgres-on-ssd && \
+    perl -pi -e 's{/var/lib/postgresql/9.3/main}{/mnt/postgres-on-ssd}' /etc/postgresql/9.3/main/postgresql.conf && \
+    service postgresql start && service nginx start
