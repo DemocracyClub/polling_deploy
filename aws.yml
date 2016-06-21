@@ -82,7 +82,7 @@
         health_check:
           ping_protocol: http
           ping_port: 80
-          ping_path: "/"
+          ping_path: "/postcode/CF105AJ/"
           response_timeout: 2
           interval: 15
           unhealthy_threshold: 2
