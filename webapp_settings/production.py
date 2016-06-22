@@ -40,3 +40,7 @@ ALLOWED_HOSTS = local_ip_addresses + [
     "{{ domain}}",
     {% endfor %}
 ]
+
+{% if google_maps_api_key %}
+GOOGLE_API_KEY = '{{ google_maps_api_key }}'
+{% endif %}

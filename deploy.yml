@@ -7,6 +7,7 @@
     #- @vault.yml
   vars:
     logger_prod_password: '{{ vault_logger_prod_password | mandatory }}'
+    google_maps_api_key: '{{ vault_google_maps_api_key | default("") }}'
   gather_facts: true
   become: true
   become_user: "{{ project_name }}"
