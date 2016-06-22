@@ -18,7 +18,7 @@ amis.
 
 - If the addressbase dump has changed, or if you haven't built it yet then:
 
-        AWS_PROFILE=democlub ./packer database
+        AWS_PROFILE=democlub ./packer addressbase
 
   That will output an AMI id that you will need to manually copy. Look for
   lines like this near the end of the output:
@@ -30,14 +30,25 @@ amis.
   stage)
 
   The AMI id (`ami-7c8f160f` in this case) needs to go into
-  `./packer-vars.json`:
+  `./packer-vars.json` under the database_ami_id.
 
-      echo "ami-7c8f160f" | jq -R '{database_ami_id: .}' > packer-vars.json
+- If the pollingstations/council dump has changed then similary to
+    `addressbase` above run
+
+        AWS_PROFILE=democlub ./packer imported-db
+
+  and store the resulting AMI id in the `imported-db_ami_id` key.
+
+  This will build one the addressbase AMI and include in the councils and
+  polling stations data.
 
 - To make just a code change the build the `server` AMI. This is built on the
-    `database` AMI and just adds the code changes.
+    `imported-db` AMI and just adds the code changes.
 
         ./packer server
+
+  **NOTE**: To run this you will need the Ansible Vault password. Place it in
+  a `.vault_pass.txt` file in the same directory as this file.
 
 ### Debugging the build
 

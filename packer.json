@@ -83,7 +83,8 @@
       "playbook_file": "./provision.yml",
       "groups":["production", "servers", "remote"],
       "extra_arguments": [
-        "--extra-vars", "nickname=production packer=1 branch={{user `branch`}}"
+        "--extra-vars", "nickname=production packer=1 branch={{user `branch`}}",
+        "--extra-vars", "@vault.yml"
       ]
     },
     {
@@ -119,7 +120,7 @@
       "playbook_file": "./deploy.yml",
       "groups":["production", "servers", "remote"],
       "extra_arguments": [
-        "--extra-vars", "nickname=production packer=1 branch=master"
+        "--extra-vars", "nickname=production packer=1 branch=master vault_logger_prod_password=dummy"
       ]
     },
     {
