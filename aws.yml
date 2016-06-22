@@ -100,8 +100,8 @@
           ping_path: "/postcode/CF105AJ/"
           response_timeout: 2
           interval: 15
-          unhealthy_threshold: 2
-          healthy_threshold: 3
+          unhealthy_threshold: 5
+          healthy_threshold: 2
         subnets: "{{ subnets.subnets | map(attribute='id') |list }}"
         tags:
           Env: "{{ aws_env }}"
@@ -128,7 +128,6 @@
           - Env: "{{ aws_env }}"
             Name: pollingstations-spot-asg
         desired_capacity: 1
-        health_check_type: ELB
         launch_config_name: "{{launchconfig.name}}"
         load_balancers: [ "{{ elb_result.elb.name }}" ]
         max_size: 10
