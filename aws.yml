@@ -132,6 +132,7 @@
         load_balancers: [ "{{ elb_result.elb.name }}" ]
         max_size: 10
         min_size: 0
+        termination_policies: [ OldestLaunchConfiguration, ClosestToNextInstanceHour ]
         replace_all_instances: "{{ replace_all|default(False) }}"
         # Yes, subnets go in vpc_zone_identifier. Blame Garethr.
         vpc_zone_identifier: "{{ subnets.subnets | map(attribute='id') |list }}"
@@ -158,12 +159,12 @@
           - Env: "{{ aws_env }}"
             Name: pollingstations-asg
         desired_capacity: 2
-        health_check_type: ELB
         launch_config_name: "{{launchconfig.name}}"
         load_balancers: ["{{ elb_result.elb.name }}"]
         max_size: 10
         min_size: 0
         replace_all_instances: "{{ replace_all|default(False) }}"
+        termination_policies: [ OldestLaunchConfiguration, ClosestToNextInstanceHour ]
         # Yes, subnets go in vpc_zone_identifier. Blame Garethr.
         vpc_zone_identifier: "{{ subnets.subnets | map(attribute='id') |list }}"
         # Wait for this long to replace old instances
@@ -173,9 +174,9 @@
 
     - name: Delete old unused spot price Launch Configs
       ec2_lc:
-        name: "spotprice-pollingstations_{{ old_lc_num }}"
+        name: "spotprice-pollingstations_{{ aws_env }}-{{ old_lc_num }}"
         state: absent
     - name: Delete old unused on-demand Launch Configs
       ec2_lc:
-        name: "pollingstations_{{ old_lc_num }}"
+        name: "pollingstations_{{ aws_env }}-{{ old_lc_num }}"
         state: absent
