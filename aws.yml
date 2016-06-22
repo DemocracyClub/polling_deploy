@@ -102,6 +102,9 @@
           unhealthy_threshold: 2
           healthy_threshold: 3
         subnets: "{{ subnets.subnets | map(attribute='id') |list }}"
+        tags:
+          Env: "{{ aws_env }}"
+          Name: "pollingstations-{{ aws_env }}"
       register: elb_result
 
     - name: Spot price Launch Config
