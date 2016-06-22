@@ -88,4 +88,4 @@ new launch config and update the ASG config (even if you don't replace the
 existing instances) otherwise a scaling event or failed host will "revert"
 your changes.
 
-[ansible_command_module]:
+[ansible_command_module]: http://docs.ansible.com/ansible/command_module.html
