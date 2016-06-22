@@ -9,7 +9,7 @@ users:
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
     ssh-authorized-keys:
-      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC8BLM9LJVAdGFQYUeMvZ56Ll3sWUoPp3p+1zvIaqg73tn470fTgiQ6MOS/cKjbZqcN242H1Ih+oUDAkbMky2ks/9HaxAgxHsYoRBcSmeafq6x0JLhom72j5LC2zChMeyGLpt/6OfacPPL8z"
+      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC8BLM9LJVAdGFQYUeMvZ56Ll3sWUoPp3p+1zvIaqg73tn470fTgiQ6MOS/cKjbZqcN242H1Ih+oUDAkbMky2ks/9HaxAgxHsYoRBcSmeafq6x0JLhom72j5LC2zChMeyGLpt/6OfacPPL8PdZsW9V/sCzSQUD7AIc+/bgqpTIn/XfpTTMNUZi8qkoDMr53TgZhq70p5ZZp2z0IUSgkZ5LELxlOkhTRwA6ShYd1EWFsvLddze2vQUCZfSWecVoVejBRJ6jaOTecP866XSciQu6poab0brFCm3k0377UMljXYWCqs653xgK1xyrO2ezhicyKxszh77qfIrTMQdGL+wYz symroe@Syms-MacBook-Pro.local"
 
 # These are run one per instance lifetime, not once per boot
 #  IF THERE IS SPACE: move the postgres datadir on to the SSD and tweak it's config

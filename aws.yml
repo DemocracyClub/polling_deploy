@@ -68,6 +68,10 @@
             from_port: 22
             to_port: 22
             cidr_ip: 217.169.25.231/32
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 86.165.178.40/32
       register: sg_instance
 
     # this will fail first time becasue we're not adding any instances to it :(
