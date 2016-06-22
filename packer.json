@@ -58,7 +58,7 @@
     {
       "name": "imported-db",
       "type": "amazon-ebs",
-      "ami_name": "ukpollingstations {{isotime |clean_ami_name }}",
+      "ami_name": "councilsdb {{isotime |clean_ami_name }}",
       "ami_description": "AMI with Addressbase and Council data pre-imported",
       "associate_public_ip_address": true,
       "iam_instance_profile": "packer-ami-builder",
@@ -77,23 +77,6 @@
     }
   ],
   "provisioners": [
-    {
-      "type": "ansible",
-      "only": ["server"],
-      "playbook_file": "./provision.yml",
-      "groups":["production", "servers", "remote"],
-      "extra_arguments": [
-        "--extra-vars", "nickname=production packer=1 branch={{user `branch`}}",
-        "--extra-vars", "@vault.yml"
-      ]
-    },
-    {
-      "type": "shell",
-      "only": ["server"],
-      "inline": [
-        "sudo rm -rf /var/log/cloud-init*.log /home/ubuntu/.ssh/authorized_keys"
-      ]
-    },
     { "type": "ansible",
       "only": ["addressbase"],
       "playbook_file": "./provision.yml",
@@ -112,7 +95,7 @@
         "sudo -u postgres psql  polling_stations -c 'CREATE EXTENSION IF NOT EXISTS postgis;'",
         "cat /tmp/addressbase_migrations.sql | time sudo -u postgres psql polling_stations",
         "time sudo -u postgres pg_restore -d polling_stations --no-owner /tmp/addressbase.sql.tar",
-        "sudo rm -rf /var/log/cloud-init*.log /home/ubuntu/.ssh/authorized_keys /tmp/addressbase*"
+        "sudo rm -rf /tmp/addressbase*"
       ]
     },
     { "type": "ansible",
@@ -135,7 +118,24 @@
         "sudo mv /tmp/pg_restore_fast.sh /usr/local/sbin/pg_restore_fast.sh && sudo chmod +x /usr/local/sbin/pg_restore_fast.sh",
         "/usr/local/bin/aws s3 --region={{ user `build_region` }} cp s3://pollingstations-packer-assets/database_snapshots/prod_snapshot.sql /tmp/",
         "sudo /usr/local/sbin/pg_restore_fast.sh --disable-triggers --data-only -d polling_stations --no-acl --no-owner --exit-on-error /tmp/prod_snapshot.sql -j4",
-        "sudo rm -rf /var/log/cloud-init*.log /home/ubuntu/.ssh/authorized_keys /tmp/prod_snapshot.sql*"
+        "sudo rm -rf /tmp/prod_snapshot.sql*"
+      ]
+    },
+    {
+      "type": "ansible",
+      "only": "/* Comment: The slowest part of AMIs is waiting for the instance and waiting for the AMI to become available, so lets update the code in the imported-db AMI build too, that way we don't need to always build a new AMI after we've imported a new db and changed the code */",
+      "only": ["server", "imported-db"],
+      "playbook_file": "./provision.yml",
+      "groups":["production", "servers", "remote"],
+      "extra_arguments": [
+        "--extra-vars", "nickname=production packer=1 branch={{user `branch`}}",
+        "--extra-vars", "@vault.yml"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo rm -rf /var/log/cloud-init*.log /home/ubuntu/.ssh/authorized_keys"
       ]
     }
   ]
