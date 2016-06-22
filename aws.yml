@@ -16,16 +16,17 @@
     region: "{{ lookup('env', 'AWS_REGION') or 'eu-west-1' }}"
     regions:
       eu-west-1:
-        ami_id: ami-2ea53c5d
+        ami_id: ami-616af312
         # The default VPC
         vpc_id: vpc-e2c30986
       eu-central-1:
-        ami_id: ami-f5f8109a
+        ami_id: ami-b6f61ed9
         vpc_id: vpc-1e467077
     vpc_id: "{{ regions[region].vpc_id }}"
     ami_id: "{{ regions[region].ami_id }}"
+    elb_ssl_arn: "arn:aws:iam::225244788755:server-certificate/prod-multidomain"
 
-    lc_num: 7
+    lc_num: 10
     old_lc_num: "{{ lc_num - 1 }}"
     aws_env: "{{ lookup('env', 'ENVIRONMENT') or 'test' }}"
 
@@ -46,6 +47,10 @@
           - proto: tcp
             from_port: 80
             to_port: 80
+            cidr_ip: 0.0.0.0/0
+          - proto: tcp
+            from_port: 443
+            to_port: 443
             cidr_ip: 0.0.0.0/0
       register: sg_elb
 
@@ -79,6 +84,11 @@
           - protocol: http
             load_balancer_port: 80
             instance_port: 80
+          - protocol: https
+            load_balancer_port: 443
+            instance_port: 80
+            instance_protocol: http
+            ssl_certificate_id: "{{ elb_ssl_arn }}"
         health_check:
           ping_protocol: http
           ping_port: 80
