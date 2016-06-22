@@ -84,6 +84,7 @@
         # 2 AZs, but instances in 3. This settings makes it send traffic to all
         # backend instances in that case
         cross_az_load_balancing: True
+        connection_draining_timeout: 20
         listeners:
           - protocol: http
             load_balancer_port: 80
