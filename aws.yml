@@ -100,37 +100,75 @@
         subnets: "{{ subnets.subnets | map(attribute='id') |list }}"
       register: elb_result
 
-    - name: Current launchconfig
+    - name: Spot price Launch Config
       ec2_lc:
         name: "spotprice-pollingstations_{{ aws_env }}-{{ lc_num }}"
         assign_public_ip: yes
         image_id: "{{ ami_id }}"
         instance_type: m3.medium
         security_groups: ["{{ sg_instance.group_id }}"]
-        spot_price: "0.073"
+        spot_price: "{{ spot_price }}"
         user_data: "{{lookup('file', 'userdata.yml') }}"
       register: launchconfig
+      when: spot_price is defined
 
-    - name: Autoscailing group
+    - name: Spot price Autoscailing group
       ec2_asg:
         name: "spotprice-pollingstations-asg-{{ aws_env }}"
         state: present
         tags:
           - Env: "{{ aws_env }}"
-            Name: pollingstations-asg
-        launch_config_name: "{{launchconfig.name}}"
-        load_balancers:
-          - "{{ elb_result.elb.name }}"
-        replace_all_instances: "{{ replace_all|default(False) }}"
-        min_size: 0
-        max_size: 10
+            Name: pollingstations-spot-asg
         desired_capacity: 1
+        health_check_type: ELB
+        launch_config_name: "{{launchconfig.name}}"
+        load_balancers: [ "{{ elb_result.elb.name }}" ]
+        max_size: 10
+        min_size: 0
+        replace_all_instances: "{{ replace_all|default(False) }}"
         # Yes, subnets go in vpc_zone_identifier. Blame Garethr.
         vpc_zone_identifier: "{{ subnets.subnets | map(attribute='id') |list }}"
         # Wait for this long to replace old instances
         wait_timeout: 600
+      when: spot_price is defined
 
-    - name: Delete old unused Launch Configs
+    - name: On-demand Launch Config
+      ec2_lc:
+        name: "pollingstations_{{ aws_env }}-{{ lc_num }}"
+        assign_public_ip: yes
+        image_id: "{{ ami_id }}"
+        instance_type: m3.medium
+        security_groups: ["{{ sg_instance.group_id }}"]
+        user_data: "{{lookup('file', 'userdata.yml') }}"
+      register: launchconfig
+      when: not spot_price is defined
+
+    - name: On-demand Autoscailing group
+      ec2_asg:
+        name: "pollingstations-asg-{{ aws_env }}"
+        state: present
+        tags:
+          - Env: "{{ aws_env }}"
+            Name: pollingstations-asg
+        desired_capacity: 1
+        health_check_type: ELB
+        launch_config_name: "{{launchconfig.name}}"
+        load_balancers: ["{{ elb_result.elb.name }}"]
+        max_size: 10
+        min_size: 0
+        replace_all_instances: "{{ replace_all|default(False) }}"
+        # Yes, subnets go in vpc_zone_identifier. Blame Garethr.
+        vpc_zone_identifier: "{{ subnets.subnets | map(attribute='id') |list }}"
+        # Wait for this long to replace old instances
+        wait_timeout: 600
+      when: not spot_price is defined
+
+
+    - name: Delete old unused spot price Launch Configs
       ec2_lc:
         name: "spotprice-pollingstations_{{ old_lc_num }}"
+        state: absent
+    - name: Delete old unused on-demand Launch Configs
+      ec2_lc:
+        name: "pollingstations_{{ old_lc_num }}"
         state: absent
