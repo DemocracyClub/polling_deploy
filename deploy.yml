@@ -1,16 +1,17 @@
 ---
-- hosts: servers
+- hosts: all
   vars_files:
     - vars.yml
     # We want the vault to be loaded conditionally, so we do if via the
     # `--extra-args` command line flag
-    #- @vault.yml
+    # - @vault.yml
   vars:
     logger_prod_password: '{{ vault_logger_prod_password | mandatory }}'
     google_maps_api_key: '{{ vault_google_maps_api_key | default("") }}'
   gather_facts: true
   become: true
   become_user: "{{ project_name }}"
+
 
   tasks:
   - name: Pull sources from the repository.
@@ -32,6 +33,7 @@
     gem: name=sass version=3.4.21 state=present user_install=false
     environment:
       GEM_HOME: "{{ project_root }}/gems"
+    when: packer is undefined
 
   - name: Migrate Django database.
     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py migrate --noinput"
@@ -43,7 +45,7 @@
      PATH: "{{ project_root }}/gems/bin:{{ ansible_env.PATH }}"
     args:
       chdir: "{{ project_root }}"
-    when: packer is defined
+    when: packer is undefined
 
   - name: Generate Django media.
     command: "./env/bin/python code/manage.py collectstatic --noinput"
@@ -52,6 +54,7 @@
      PATH: "{{ project_root }}/gems/bin:{{ ansible_env.PATH }}"
     args:
       chdir: "{{ project_root }}"
+    when: packer is undefined
 
   # If we are running via packer (i.e. on an AWS instance with the right permissions) then we can sync the assets to the S3 bucket
   - name: Sync assets to S3 bucket
@@ -61,10 +64,11 @@
      PATH: "{{ project_root }}/gems/bin:{{ ansible_env.PATH }}"
     args:
       chdir: "{{ project_root }}"
-    when: packer is defined
+    when: packer is undefined
 
   - name: Compile all translations from .po files into .mo files
     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py compilemessages"
+    when: packer is undefined
 
   handlers:
     - include: handlers.yml

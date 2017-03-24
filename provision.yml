@@ -48,8 +48,17 @@
   - name: Remove default nginx vhost
     file: name=/etc/nginx/sites-enabled/default state=absent
 
+  - name: Optimize Postgres for DB import
+    template: src=files/conf/pg_write_heavy.conf dest=/etc/postgresql/9.3/main/postgresql.conf
+    when: packer is defined
+
+  - name: Optimize Postgres for reads
+    template: src=files/conf/pg_read_heavy.conf dest=/etc/postgresql/9.3/main/postgresql.conf
+    when: not packer
+
   - name: Install postgres_hba configuration file.
     template: src=files/conf/pg_hba.conf dest=/etc/postgresql/9.3/main/pg_hba.conf
+
   - name: restart postgres
     service: name=postgresql state=restarted
 
@@ -71,6 +80,12 @@
 
 - include: deploy.yml
   tags: [deploy]
+
+- include: addressbase.yml
+  when: packer_addressbase is defined
+
+- include: import_data.yml
+  when: packer_import_data is defined
 
 - hosts: servers
   vars_files:

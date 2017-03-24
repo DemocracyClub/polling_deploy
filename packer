@@ -4,4 +4,4 @@
 # ./packer server
 type="${1?Usage $0 '[server|database]'}"
 shift;
-/usr/bin/env packer build -var-file=packer-vars.json -only="${type}" "$@" packer.json
+/usr/bin/env packer build -var-file=packer-vars.json -var-file=packer-user-vars.json -only="${type}" "$@" packer.json

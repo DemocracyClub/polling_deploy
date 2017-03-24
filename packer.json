@@ -3,8 +3,10 @@
   "variables": {
     "build_region": "eu-west-1",
     "regions_to_copy_to": "eu-central-1",
-    "branch": "master",
-    "max_spot_price": "0.1"
+    "branch": "reimport_2017-03-09",
+    "max_spot_price": "0.1",
+    "ssh_private_key_file": null,
+    "election_regex": null
   },
   "builders": [
     {
@@ -30,16 +32,18 @@
     {
       "name": "addressbase",
       "type": "amazon-ebs",
+      "ssh_keypair_name": "dc_admins",
+      "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
       "ami_name": "addressbase {{isotime |clean_ami_name }}",
       "associate_public_ip_address": true,
       "iam_instance_profile": "packer-ami-builder",
-      "instance_type":"m4.large",
+      "instance_type":"m4.10xlarge",
       "spot_price": "{{ user `max_spot_price`}}",
       "launch_block_device_mappings": [
           {
               "device_name": "/dev/sda1",
               "delete_on_termination": true,
-              "volume_size": "20",
+              "volume_size": "40",
               "volume_type": "gp2"
           }
       ],
@@ -58,11 +62,13 @@
     {
       "name": "imported-db",
       "type": "amazon-ebs",
-      "ami_name": "councilsdb {{isotime |clean_ami_name }}",
+      "ssh_keypair_name": "dc_admins",
+      "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
+      "ami_name": "imported_data {{isotime |clean_ami_name }} ({{user `election_regex` |clean_ami_name }})",
       "ami_description": "AMI with Addressbase and Council data pre-imported",
       "associate_public_ip_address": true,
       "iam_instance_profile": "packer-ami-builder",
-      "instance_type":"m4.large",
+      "instance_type":"m4.4xlarge",
       "region": "eu-west-1",
       "region":"{{user `build_region` }}",
       "source_ami": "{{user `database_ami_id`}}",
@@ -77,61 +83,53 @@
     }
   ],
   "provisioners": [
+
     { "type": "ansible",
       "only": ["addressbase"],
       "playbook_file": "./provision.yml",
       "groups":["production", "servers", "remote"],
       "extra_arguments": [
-        "--extra-vars", "nickname=production packer=1 branch=master",
-        "--skip-tags", "deploy"
+        "--extra-vars", "nickname=production packer=1 build_region={{ user `build_region` }} packer_addressbase=1 branch={{user `branch`}}",
+        "--extra-vars", "@vault.yml"
       ]
     },
-    {
-      "type": "shell",
-      "only": ["addressbase"],
-      "inline": [
-        "/usr/local/bin/aws s3 --region={{ user `build_region` }} cp s3://pollingstations-packer-assets/addressbase/addressbase.sql.tar /tmp/",
-        "/usr/local/bin/aws s3 --region={{ user `build_region` }} cp s3://pollingstations-packer-assets/addressbase/addressbase_migrations.sql /tmp/",
-        "sudo -u postgres psql  polling_stations -c 'CREATE EXTENSION IF NOT EXISTS postgis;'",
-        "cat /tmp/addressbase_migrations.sql | time sudo -u postgres psql polling_stations",
-        "time sudo -u postgres pg_restore -d polling_stations --no-owner /tmp/addressbase.sql.tar",
-        "sudo rm -rf /tmp/addressbase*"
-      ]
-    },
+
     { "type": "ansible",
       "only": ["addressbase"],
       "playbook_file": "./deploy.yml",
       "groups":["production", "servers", "remote"],
       "extra_arguments": [
-        "--extra-vars", "nickname=production packer=1 branch=master vault_logger_prod_password=dummy"
-      ]
-    },
-    {
-      "type": "file",
-      "only": ["imported-db"],
-      "source": "files/pg_restore_with_config.sh",
-      "destination": "/tmp/pg_restore_fast.sh"
-    },
-    { "type": "shell",
-      "only": ["imported-db"],
-      "inline": [
-        "sudo mv /tmp/pg_restore_fast.sh /usr/local/sbin/pg_restore_fast.sh && sudo chmod +x /usr/local/sbin/pg_restore_fast.sh",
-        "/usr/local/bin/aws s3 --region={{ user `build_region` }} cp s3://pollingstations-packer-assets/database_snapshots/prod_snapshot.sql /tmp/",
-        "sudo /usr/local/sbin/pg_restore_fast.sh --disable-triggers --data-only -d polling_stations --no-acl --no-owner --exit-on-error /tmp/prod_snapshot.sql -j4",
-        "sudo rm -rf /tmp/prod_snapshot.sql*"
+        "--extra-vars", "use_logger=0",
+        "--extra-vars", "nickname=production packer=1 branch={{user `branch`}} vault_logger_prod_password=dummy"
       ]
     },
     {
       "type": "ansible",
-      "only": "/* Comment: The slowest part of AMIs is waiting for the instance and waiting for the AMI to become available, so lets update the code in the imported-db AMI build too, that way we don't need to always build a new AMI after we've imported a new db and changed the code */",
-      "only": ["server", "imported-db"],
+      "only": ["imported-db"],
       "playbook_file": "./provision.yml",
       "groups":["production", "servers", "remote"],
       "extra_arguments": [
-        "--extra-vars", "nickname=production packer=1 branch={{user `branch`}}",
+        "-vv",
+        "--extra-vars", "nickname=production packer=1 packer_import_data=1",
+        "--extra-vars", "election_regex={{ user `election_regex` }} branch={{user `branch`}}",
+        "--extra-vars", "use_logger=0",
         "--extra-vars", "@vault.yml"
       ]
     },
+    {
+      "type": "ansible",
+      "only": ["server"],
+      "playbook_file": "./provision.yml",
+      "groups":["production", "servers", "remote"],
+      "extra_arguments": [
+        "-vv",
+        "--extra-vars", "nickname=production",
+        "--extra-vars", "branch={{user `branch`}}",
+        "--extra-vars", "use_logger=1",
+        "--extra-vars", "@vault.yml"
+      ]
+    },
+
     {
       "type": "shell",
       "inline": [
