@@ -16,17 +16,17 @@
     region: "{{ lookup('env', 'AWS_REGION') or 'eu-west-1' }}"
     regions:
       eu-west-1:
-        ami_id: ami-fef66e8d
+        ami_id: ami-2bbe8e4d
         # The default VPC
         vpc_id: vpc-e2c30986
-      eu-central-1:
-        ami_id: ami-6e31d901
-        vpc_id: vpc-1e467077
+      # eu-central-1:
+      #   ami_id: ami-2bbe8e4d
+      #   vpc_id: vpc-1e467077
     vpc_id: "{{ regions[region].vpc_id }}"
     ami_id: "{{ regions[region].ami_id }}"
-    elb_ssl_arn: "arn:aws:iam::225244788755:server-certificate/prod-multidomain"
+    elb_ssl_arn: "arn:aws:iam::225244788755:server-certificate/ps-prod-5"
 
-    lc_num: 17
+    lc_num: 19
     old_lc_num: "{{ lc_num - 1 }}"
     aws_env: "{{ lookup('env', 'ENVIRONMENT') or 'test' }}"
 
@@ -72,6 +72,10 @@
             from_port: 22
             to_port: 22
             cidr_ip: 86.165.178.40/32
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 81.187.11.5/32
       register: sg_instance
 
     # this will fail first time becasue we're not adding any instances to it :(
@@ -99,7 +103,7 @@
           ping_port: 80
           ping_path: "/postcode/CF105AJ/"
           response_timeout: 2
-          interval: 15
+          interval: 60
           unhealthy_threshold: 5
           healthy_threshold: 2
         subnets: "{{ subnets.subnets | map(attribute='id') |list }}"
@@ -158,7 +162,7 @@
         tags:
           - Env: "{{ aws_env }}"
             Name: pollingstations-asg
-        desired_capacity: 4
+        desired_capacity: 1
         launch_config_name: "{{launchconfig.name}}"
         load_balancers: ["{{ elb_result.elb.name }}"]
         max_size: 10

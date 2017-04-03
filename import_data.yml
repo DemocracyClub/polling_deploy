@@ -1,0 +1,20 @@
+---
+- hosts: servers
+  vars_files:
+    - vars.yml
+    # We want the vault to be loaded conditionally, so we do if via the
+    # `--extra-args` command line flag
+    # - @vault.yml
+  gather_facts: true
+  become: true
+  become_user: "{{ project_name }}"
+
+  tasks:
+  - name: Import Councils
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_councils"
+
+  - name: Import data
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import -e '{{ election_regex }}' -r --multiprocessing"
+    args:
+       executable: /bin/bash
+       chdir: "{{ project_root }}"

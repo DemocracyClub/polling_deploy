@@ -1,8 +1,8 @@
 ---
 # Create the AWS object (roles, policies) needed to build packer.
-# 
+#
 # This probably doesn't need to be run again, it's just recorded for posterity
-# on how I makde the roles.
+# on how I made the roles.
 - hosts: 127.0.0.1
   connection: local
   vars:

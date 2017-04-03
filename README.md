@@ -4,11 +4,11 @@
 
 We user [packer] to build golden AMIS. On OSX this can be installed via `brew
 install packer`. The AMIs we build are designed to come up as quickly as
-possible os they can serve traffic. This means that they contain the entier
+possible so they can serve traffic. This means that they contain the entier
 AddressBase db pre-imported. To make code-only changes quicker we have two
-amis.
+AMIS:
 
-- The "imported DB" ami which has postgres and the DB imported but nothing
+- The "imported DB" AMI which has postgres and the DB imported but nothing
   else.
 - The code/app AMI which is built off the DB ami. This is much faster to build
   as we don't have to wait for the multi gigabyte Postgres dump to restore.
@@ -18,6 +18,17 @@ amis.
 
 - If the addressbase dump has changed, or if you haven't built it yet then:
 
+#### 1. Create a DB dump containing addressbase
+
+You will need a local working copy of the app code and a fresh copy of addressbase (basic) in CSV files. clean and import address base according to the app's documentation, at the moment this involves running `./manage.py clean_addressbase` and `./manage.py import_cleaned_addresses`.
+
+#### 2. Export and upload addressbase
+
+    pg_dump --column-inserts --no-privileges --no-tablespaces --file "/tmp/addresses.sql.tar" --table "pollingstations_pollingdistrict" --table "addressbase_address" -F c "polling_stations"
+
+Upload that file to s3://pollingstations-packer-assets/addressbase/addressbase.sql.tar
+
+#### 3. Make the image
         AWS_PROFILE=democlub ./packer addressbase
 
   That will output an AMI id that you will need to manually copy. Look for

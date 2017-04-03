@@ -5,6 +5,11 @@ app_name: polling_stations
 django_media_path: polling_stations
 django_media_root: /var/www/polling_stations-media/media_root
 project_repo: https://github.com/DemocracyClub/UK-Polling-Stations.git
+addressbase_folder_name: DCS0002397781
+use_logger: 1
+packer: 0
+branch: reimport_2017-03-09
+nickname: production
 domains:
     - wheredoivote.co.uk
     - www.wheredoivote.co.uk
@@ -40,6 +45,7 @@ system_packages:
   - python-virtualenv
   - redis-server
   - acl
+  - unzip
 
 python_packages:
   - pip
