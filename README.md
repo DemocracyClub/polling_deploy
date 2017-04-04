@@ -81,7 +81,9 @@ If the addressbase dump has changed, or if you haven't built it yet then:
 - To deploy the image we've built:
   - Update `aws.yml`:
     - Set `ami_id` to image ID from last packer run (e.g: `ami-2bbe8e4d`)
-    - Set `lc_num` to (`lc_num` + 1)
+    - Find the `lc_num` value of the previous instance we deployed and set
+      `lc_num` to (previous `lc_num` + 1). When we deploy, this will clean up
+      the previous image.
     - Set `desired_capacity` to a sensible number under
       "On-demand Autoscailing group" (e.g: 4 for peak times, 1 for off-peak).
       Note we use "On-demand Autoscailing group" for live/staging instances,
