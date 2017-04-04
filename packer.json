@@ -3,7 +3,7 @@
   "variables": {
     "build_region": "eu-west-1",
     "regions_to_copy_to": "eu-central-1",
-    "branch": "reimport_2017-03-09",
+    "branch": "master",
     "max_spot_price": "0.1",
     "ssh_private_key_file": null,
     "election_regex": null
