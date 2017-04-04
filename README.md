@@ -100,8 +100,8 @@ If the addressbase dump has changed, or if you haven't built it yet then:
 If something is going wrong with the ansible or other commands you run on the
 build then the best tool for debugging it is to SSH onto the instance. By
 default packer will terminate the instance as soon as it errors though. If you
-add `-debug` flag then packer will pause at each stage until you hit enter,
-giving you the time to SSH in and examine the server.
+add `-debug` (note: **one** dash) flag then packer will pause at each stage
+until you hit enter, giving you the time to SSH in and examine the server.
 
 Packer will generate a per-build SSH private key which you will have to use:
 
