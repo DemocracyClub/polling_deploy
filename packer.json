@@ -12,6 +12,8 @@
     {
       "name": "server",
       "type": "amazon-ebs",
+      "ssh_keypair_name": "dc_admins",
+      "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
       "ami_name": "ukpollingstations {{isotime |clean_ami_name }}",
       "ami_regions":"{{user `regions_to_copy_to` }}",
       "associate_public_ip_address": true,
