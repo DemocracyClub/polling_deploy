@@ -82,10 +82,11 @@ If the addressbase dump has changed, or if you haven't built it yet then:
   - Update `aws.yml`:
     - Set `ami_id` to image ID from last packer run (e.g: `ami-2bbe8e4d`)
     - Set `lc_num` to (`lc_num` + 1)
-    - Set `desired_capacity` to a sensible number
-      (e.g: 4 for peak times, 1 for off-peak). Note we use
-      "On-demand Autoscailing group" for live instances, but may use
-      "Spot price Autoscailing group" for dev/test builds.
+    - Set `desired_capacity` to a sensible number under
+      "On-demand Autoscailing group" (e.g: 4 for peak times, 1 for off-peak).
+      Note we use "On-demand Autoscailing group" for live/staging instances,
+      "Spot price Autoscailing group" is used for building images so
+      `desired_capacity` should be 1 for "Spot price Autoscailing group".
   - Run
 
         AWS_PROFILE=democlub ansible-playbook aws.yml -e replace_all=True
