@@ -1,5 +1,13 @@
 # UK Polling Stations build and deploy
 
+## Setup
+
+- `pip install ansible==2.1.0.0`. This build is known to fail for various reasons with ansible `2.0.0.2`, `2.1.1.0` and `2.2.2.0`
+- `pip install boto`
+- Ensure your AWS credentials are in `~/.aws/credentials`
+- `cp packer-user-vars.example.json packer-user-vars.json` and fill in the path to your private key file
+- create `.vault_pass.txt` with your vault password
+
 ## Amazon Machine Images (AMI)
 
 We use [packer](https://www.packer.io/) to build golden AMIS.
