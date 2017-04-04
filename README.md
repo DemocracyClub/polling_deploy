@@ -89,6 +89,8 @@ If the addressbase dump has changed, or if you haven't built it yet then:
       Note we use "On-demand Autoscailing group" for live/staging instances,
       "Spot price Autoscailing group" is used for building images so
       `desired_capacity` should be 1 for "Spot price Autoscailing group".
+  - If we're deploying to production, `export ENVIRONMENT=prod`. Obviously
+    don't do this if it is a staging deploy!
   - Run
 
         AWS_PROFILE=democlub ansible-playbook aws.yml -e replace_all=True
