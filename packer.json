@@ -4,7 +4,7 @@
     "build_region": "eu-west-1",
     "regions_to_copy_to": "eu-central-1",
     "branch": "master",
-    "max_spot_price": "0.1",
+    "max_spot_price": "0.2",
     "ssh_private_key_file": null,
     "election_regex": null
   },
