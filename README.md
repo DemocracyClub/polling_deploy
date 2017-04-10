@@ -135,3 +135,11 @@ existing instances) otherwise a scaling event or failed host will "revert"
 your changes.
 
 [ansible_command_module]: http://docs.ansible.com/ansible/command_module.html
+
+### Ad-hoc deploy
+
+`ansible-playbook -u myusername -i dynamic-inventory/ -l tag_Env_prod deploy.yml --extra-vars @vault.yml`
+
+### Take down data
+
+`ansible -u myusername -i dynamic-inventory/ -b --become-user polling_stations tag_Env_prod -m shell -a  "cd /var/www/polling_stations/code/ && ../env/bin/python manage.py teardown -c X01000001"`
