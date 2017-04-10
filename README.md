@@ -44,17 +44,6 @@ If the addressbase dump has changed, or if you haven't built it yet then:
 
 - If you need to build the `addressbase image` run:
 
-#### 1. Create a DB dump containing addressbase
-
-You will need a local working copy of the app code and a fresh copy of addressbase (basic) in CSV files. clean and import address base according to the app's documentation, at the moment this involves running `./manage.py clean_addressbase` and `./manage.py import_cleaned_addresses`.
-
-#### 2. Export and upload addressbase
-
-    pg_dump --column-inserts --no-privileges --no-tablespaces --file "/tmp/addresses.sql.tar" --table "pollingstations_pollingdistrict" --table "addressbase_address" -F c "polling_stations"
-
-Upload that file to s3://pollingstations-packer-assets/addressbase/addressbase.sql.tar
-
-#### 3. Make the image
         AWS_PROFILE=democlub ./packer addressbase
 
   That will output an AMI id that you will need to manually copy. Look for
