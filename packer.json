@@ -45,7 +45,7 @@
           {
               "device_name": "/dev/sda1",
               "delete_on_termination": true,
-              "volume_size": "40",
+              "volume_size": "50",
               "volume_type": "gp2"
           }
       ],
@@ -102,7 +102,8 @@
       "groups":["production", "servers", "remote"],
       "extra_arguments": [
         "--extra-vars", "use_logger=0",
-        "--extra-vars", "nickname=production packer=1 branch={{user `branch`}} vault_logger_prod_password=dummy"
+        "--extra-vars", "nickname=production packer=1 branch={{user `branch`}} vault_logger_prod_password=dummy",
+        "--extra-vars", "@vault.yml"
       ]
     },
     {
