@@ -54,4 +54,4 @@ MORPH_API_KEY = '{{ vault_morph_api_key }}'
 MAPIT_URL = "http://mapit.democracyclub.org.uk/"
 MAPIT_UA = "scraper/sym"
 
-EXAMPLE_POSTCODE = "GU17 0BP"
+EXAMPLE_POSTCODE = "GL1 2EQ"
