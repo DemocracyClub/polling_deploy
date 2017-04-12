@@ -151,7 +151,7 @@
         image_id: "{{ ami_id }}"
         instance_type: m3.medium
         security_groups: ["{{ sg_instance.group_id }}"]
-        user_data: "{{lookup('file', 'userdata.yml') }}"
+        user_data: "{{lookup('template', 'userdata.yml') }}"
       register: launchconfig
       when: not spot_price is defined
 
