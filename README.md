@@ -84,8 +84,9 @@ or if you haven't built it yet then:
   - Update `aws.yml`:
     - Set `ami_id` to image ID from last packer run (e.g: `ami-2bbe8e4d`)
     - Find the `lc_num` value of the previous instance we deployed and set
-      `lc_num` to (previous `lc_num` + 1). When we deploy, this will clean up
-      the previous image.
+      `lc_num` to (previous `lc_num` + 1). This can be found by looking at the
+      Launch Configuration names in the AWS console.
+      When we deploy, this will clean up the previous image.
     - Set `desired_capacity` to a sensible number under
       "On-demand Autoscailing group" (e.g: 4 for peak times, 1 for off-peak).
       Note we use "On-demand Autoscailing group" for live/staging instances,
@@ -100,6 +101,8 @@ or if you haven't built it yet then:
   This will create a new launch config, associated the ASG with it, and then
   delete the old one. If `replace_all` is set then it will also cycle all the
   old instances (1 by 1) to make them use new ones.
+  - To test a staging deploy, ensure `stage.wheredoivote.co.uk` is pointed at
+    the staging load balancer.
 
 ### Debugging the build
 
