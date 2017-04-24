@@ -29,9 +29,10 @@ Each image is described as a `builders` object in `packer.json`.
 
 ### How to build
 
-If the addressbase dump has changed, or if you haven't built it yet then:
+If the there is a new AddressBase release or ONSAD release,
+or if you haven't built it yet then:
 
-#### 1. Fetch latest AddressBase
+#### 1. Fetch latest AddressBase and ONSAD
 
 - Order a new copy from the OS website and download it from their FTP
 - The files will be in a directory named something like DCS0000000000
@@ -39,6 +40,7 @@ If the addressbase dump has changed, or if you haven't built it yet then:
   s3://pollingstations-packer-assets/addressbase/DCS0000000000
 - Replace `addressbase_folder_name` in `vars.yml` with the directory name
   (e.g: DCS0000000000)
+- Replace `onsad_url` in `vars.yml` with the URL for the latest ONSAD release
 
 #### 2. Make the image
 
@@ -82,8 +84,9 @@ If the addressbase dump has changed, or if you haven't built it yet then:
   - Update `aws.yml`:
     - Set `ami_id` to image ID from last packer run (e.g: `ami-2bbe8e4d`)
     - Find the `lc_num` value of the previous instance we deployed and set
-      `lc_num` to (previous `lc_num` + 1). When we deploy, this will clean up
-      the previous image.
+      `lc_num` to (previous `lc_num` + 1). This can be found by looking at the
+      Launch Configuration names in the AWS console.
+      When we deploy, this will clean up the previous image.
     - Set `desired_capacity` to a sensible number under
       "On-demand Autoscailing group" (e.g: 4 for peak times, 1 for off-peak).
       Note we use "On-demand Autoscailing group" for live/staging instances,
@@ -98,6 +101,8 @@ If the addressbase dump has changed, or if you haven't built it yet then:
   This will create a new launch config, associated the ASG with it, and then
   delete the old one. If `replace_all` is set then it will also cycle all the
   old instances (1 by 1) to make them use new ones.
+  - To test a staging deploy, ensure `stage.wheredoivote.co.uk` is pointed at
+    the staging load balancer.
 
 ### Debugging the build
 

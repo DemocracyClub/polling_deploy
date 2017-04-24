@@ -19,6 +19,12 @@ users:
 # These are run one per instance lifetime, not once per boot
 #  IF THERE IS SPACE: move the postgres datadir on to the SSD and tweak it's config
 runcmd:
+{% if aws_env == 'test' %}
+  - "perl -pi -e 's{wheredoivote.co.uk}{stage.wheredoivote.co.uk}' /etc/nginx/sites-enabled/polling_stations"
+  - "perl -pi -e 's{wheredoivote.co.uk}{stage.wheredoivote.co.uk}' /var/www/polling_stations/code/polling_stations/settings/local.py"
+  - "service nginx restart"
+  - "service polling_stations_gunicorn restart"
+{% endif %}
   - |
     set -x
     [ "$(df /mnt/ --output=avail | tail -n1)" -gt "$(sudo du -s /var/lib/postgresql/9.3/main/ | awk '{print $1}')" ] && \

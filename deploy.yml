@@ -33,7 +33,7 @@
     gem: name=sass version=3.4.21 state=present user_install=false
     environment:
       GEM_HOME: "{{ project_root }}/gems"
-    when: packer is undefined
+    when: not packer
 
   - name: Migrate Django database.
     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py migrate --noinput"
@@ -45,7 +45,7 @@
      PATH: "{{ project_root }}/gems/bin:{{ ansible_env.PATH }}"
     args:
       chdir: "{{ project_root }}"
-    when: packer is undefined
+    when: not packer
 
   - name: Generate Django media.
     command: "./env/bin/python code/manage.py collectstatic --noinput"
@@ -54,7 +54,7 @@
      PATH: "{{ project_root }}/gems/bin:{{ ansible_env.PATH }}"
     args:
       chdir: "{{ project_root }}"
-    when: packer is undefined
+    when: not packer
 
   # If we are running via packer (i.e. on an AWS instance with the right permissions) then we can sync the assets to the S3 bucket
   - name: Sync assets to S3 bucket
@@ -64,11 +64,11 @@
      PATH: "{{ project_root }}/gems/bin:{{ ansible_env.PATH }}"
     args:
       chdir: "{{ project_root }}"
-    when: packer is undefined
+    when: not packer
 
   - name: Compile all translations from .po files into .mo files
     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py compilemessages"
-    when: packer is undefined
+    when: not packer
 
   handlers:
     - include: handlers.yml

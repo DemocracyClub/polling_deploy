@@ -10,9 +10,16 @@
   become_user: "{{ project_name }}"
 
   tasks:
+  - name: Import Councils
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_councils --nosleep"
+
   - name: Set addressbase tmp path
     set_fact:
       addressbase_tmp_path: '/tmp/addressbase'
+
+  - name: Set ONSAD tmp path
+    set_fact:
+      onsad_tmp_path: '/tmp/onsad'
 
   - name: Create the addressbase tmp dir
     file: state=directory path={{ addressbase_tmp_path }}
@@ -31,7 +38,31 @@
   - name: Import cleaned addresses
     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_cleaned_addresses {{ addressbase_tmp_path }}"
 
-  - name: Delete addressbase
+  - name: Delete addressbase tmp files
     file:
       state: absent
       path: "{{ addressbase_tmp_path }}"
+
+  - name: Create the ONSAD tmp dir
+    file: state=directory path={{ onsad_tmp_path }}
+
+  - name: Download ONSAD
+    get_url:
+      url: "{{ onsad_url }}"
+      dest: "{{ onsad_tmp_path }}"
+
+  - name: Unzip ONSAD
+    shell: "unzip \\*.zip"
+    args:
+      chdir: "{{ onsad_tmp_path }}"
+
+  - name: Import ONSAD
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_onsad {{ onsad_tmp_path }}/Data"
+
+  - name: Create postcode blacklist
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py create_blacklist"
+
+  - name: Delete ONSAD tmp files
+    file:
+      state: absent
+      path: "{{ onsad_tmp_path }}"

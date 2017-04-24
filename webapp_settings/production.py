@@ -42,7 +42,7 @@ STATIC_URL = 'https://s3-eu-west-1.amazonaws.com/pollingstations-assets/'
 local_ip_addresses = [(s.connect(('8.8.8.8', 53)), s.getsockname()[0], s.close())[1] for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]]
 ALLOWED_HOSTS = local_ip_addresses + [
     {% for domain in domains %}
-    "{{ domain}}",
+    "{{ domain }}",
     {% endfor %}
 ]
 
@@ -54,4 +54,4 @@ MORPH_API_KEY = '{{ vault_morph_api_key }}'
 MAPIT_URL = "http://mapit.democracyclub.org.uk/"
 MAPIT_UA = "scraper/sym"
 
-EXAMPLE_POSTCODE = "GU17 0BP"
+EXAMPLE_POSTCODE = "GL1 2EQ"
