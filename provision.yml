@@ -75,6 +75,14 @@
     postgresql_db:
       name: "{{project_name}}"
 
+  - name: Install rsyslog configuration files
+    template: src={{item.src}} dest={{item.dst}}
+    with_items:
+      - { 'src': 'files/conf/rsyslog/rsyslog.conf', 'dst': '/etc/rsyslog.conf' }
+      - { 'src': 'files/conf/rsyslog/nginx.conf', 'dst': '/etc/rsyslog.d/nginx.conf' }
+    notify:
+      - restart rsyslog
+
   handlers:
     - include: handlers.yml
 

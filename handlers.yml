@@ -14,3 +14,7 @@
 - name: restart postgres
   service: name=postgresql state=restart
   become: True
+
+- name: restart rsyslog
+  service: name=rsyslog state=restarted
+  become: True

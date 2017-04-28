@@ -16,7 +16,7 @@
     region: "{{ lookup('env', 'AWS_REGION') or 'eu-west-1' }}"
     regions:
       eu-west-1:
-        ami_id: ami-74313012
+        ami_id: ami-e4030082
         # The default VPC
         vpc_id: vpc-e2c30986
       # eu-central-1:
@@ -26,7 +26,7 @@
     ami_id: "{{ regions[region].ami_id }}"
     elb_ssl_arn: "arn:aws:iam::225244788755:server-certificate/ps-prod-5"
 
-    lc_num: 24
+    lc_num: 25
     old_lc_num: "{{ lc_num - 1 }}"
     aws_env: "{{ lookup('env', 'ENVIRONMENT') or 'test' }}"
 
@@ -167,7 +167,7 @@
         launch_config_name: "{{launchconfig.name}}"
         load_balancers: ["{{ elb_result.elb.name }}"]
         max_size: 10
-        min_size: 0
+        min_size: 1
         replace_all_instances: "{{ replace_all|default(False) }}"
         termination_policies: [ OldestLaunchConfiguration, ClosestToNextInstanceHour ]
         # Yes, subnets go in vpc_zone_identifier. Blame Garethr.
