@@ -53,5 +53,6 @@ GOOGLE_API_KEY = '{{ google_maps_api_key }}'
 MORPH_API_KEY = '{{ vault_morph_api_key }}'
 MAPIT_URL = "http://mapit.democracyclub.org.uk/"
 MAPIT_UA = "scraper/sym"
+CUSTOM_UA = "DemocracyClub/wheredoivote.co.uk"
 
 EXAMPLE_POSTCODE = "GL1 2EQ"
