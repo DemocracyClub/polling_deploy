@@ -6,7 +6,7 @@ django_media_path: polling_stations
 django_media_root: /var/www/polling_stations-media/media_root
 project_repo: https://github.com/DemocracyClub/UK-Polling-Stations.git
 addressbase_folder_name: DCS0002535226
-onsad_url: http://ons.maps.arcgis.com/sharing/rest/content/items/5a0d38f408ae426eb7f309bb0a9d452d/data
+onsad_url: http://ons.maps.arcgis.com/sharing/rest/content/items/c1db046e367d497c92ffbe2f2a23e22f/data
 use_logger: 1
 packer: 0
 branch: master
