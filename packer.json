@@ -70,7 +70,7 @@
       "ami_description": "AMI with Addressbase and Council data pre-imported",
       "associate_public_ip_address": true,
       "iam_instance_profile": "packer-ami-builder",
-      "instance_type":"m4.4xlarge",
+      "instance_type":"m4.10xlarge",
       "region": "eu-west-1",
       "region":"{{user `build_region` }}",
       "source_ami": "{{user `database_ami_id`}}",
