@@ -16,7 +16,7 @@
     region: "{{ lookup('env', 'AWS_REGION') or 'eu-west-1' }}"
     regions:
       eu-west-1:
-        ami_id: ami-de838cb8
+        ami_id: ami-74dad312
         # The default VPC
         vpc_id: vpc-e2c30986
       # eu-central-1:
@@ -26,7 +26,7 @@
     ami_id: "{{ regions[region].ami_id }}"
     elb_ssl_arn: "arn:aws:iam::225244788755:server-certificate/ps-prod-5"
 
-    lc_num: 28
+    lc_num: 29
     old_lc_num: "{{ lc_num - 1 }}"
     aws_env: "{{ lookup('env', 'ENVIRONMENT') or 'test' }}"
 
@@ -163,7 +163,7 @@
         tags:
           - Env: "{{ aws_env }}"
             Name: pollingstations-asg
-        desired_capacity: 1
+        desired_capacity: 4
         health_check_type: ELB
         launch_config_name: "{{launchconfig.name}}"
         load_balancers: ["{{ elb_result.elb.name }}"]
