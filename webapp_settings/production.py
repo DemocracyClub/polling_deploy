@@ -66,3 +66,13 @@ MAPIT_UA = "scraper/sym"
 CUSTOM_UA = "DemocracyClub/wheredoivote.co.uk"
 
 EXAMPLE_POSTCODE = "GL1 2EQ"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://wdiv-cache.5ww5u6.ng.0001.euw1.cache.amazonaws.com:6379",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
