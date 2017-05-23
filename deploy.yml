@@ -74,6 +74,7 @@
     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py misc_fixes"
     args:
       chdir: "{{ project_root }}/code/"
+    when: not packer
 
   handlers:
     - include: handlers.yml
