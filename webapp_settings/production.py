@@ -65,7 +65,7 @@ MAPIT_URL = "http://mapit.democracyclub.org.uk/"
 MAPIT_UA = "scraper/sym"
 CUSTOM_UA = "DemocracyClub/wheredoivote.co.uk"
 
-EXAMPLE_POSTCODE = "GL1 2EQ"
+EXAMPLE_POSTCODE = "CF10 5AJ"
 
 CACHES = {
     "default": {
