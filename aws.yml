@@ -16,7 +16,7 @@
     region: "{{ lookup('env', 'AWS_REGION') or 'eu-west-1' }}"
     regions:
       eu-west-1:
-        ami_id: ami-875548e1
+        ami_id: ami-4edfc228
         # The default VPC
         vpc_id: vpc-e2c30986
       # eu-central-1:
@@ -26,7 +26,7 @@
     ami_id: "{{ regions[region].ami_id }}"
     elb_ssl_arn: "arn:aws:iam::225244788755:server-certificate/ps-prod-9"
 
-    lc_num: 43
+    lc_num: 45
     old_lc_num: "{{ lc_num - 1 }}"
     aws_env: "{{ lookup('env', 'ENVIRONMENT') or 'test' }}"
 
@@ -163,12 +163,12 @@
         tags:
           - Env: "{{ aws_env }}"
             Name: pollingstations-asg
-        desired_capacity: 10
+        desired_capacity: 1
         health_check_type: ELB
         launch_config_name: "{{launchconfig.name}}"
         load_balancers: ["{{ elb_result.elb.name }}"]
         max_size: 10
-        min_size: 7
+        min_size: 1
         replace_all_instances: "{{ replace_all|default(False) }}"
         termination_policies: [ OldestLaunchConfiguration, ClosestToNextInstanceHour ]
         # Yes, subnets go in vpc_zone_identifier. Blame Garethr.
