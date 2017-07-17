@@ -59,6 +59,9 @@ ALLOWED_HOSTS = local_ip_addresses + [
 {% if google_maps_api_key %}
 GOOGLE_API_KEY = '{{ google_maps_api_key }}'
 {% endif %}
+{% if vault_mapzen_api_key %}
+MAPZEN_API_KEY = '{{ vault_mapzen_api_key }}'
+{% endif %}
 
 MORPH_API_KEY = '{{ vault_morph_api_key }}'
 MAPIT_URL = "http://mapit.democracyclub.org.uk/"
