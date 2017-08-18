@@ -1,5 +1,5 @@
 {
-  "database_ami_id": "ami-48aabf2e",
+  "database_ami_id": "ami-26aa565f",
   "imported-db_ami_id": "ami-cec6d4a8",
   "election_regex": "parl.2017-06-08"
 }
