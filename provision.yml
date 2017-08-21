@@ -1,11 +1,24 @@
 ---
 - hosts: servers
+  pre_tasks:
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal aptitude)
+      register: output
+      changed_when: 'output.stdout != ""'
   vars_files:
     - vars.yml
-  gather_facts: true
+  # gather facts needs to be off until we've run pre_tasks
+  # because gather_facts requires python
+  gather_facts: false
   become: true
 
   tasks:
+
+  # turn gather_facts back on
+  # so that ansible_env is defined
+  - name: gather facts
+    setup:
+
   # When building an AMI make sure that we update to the latest of all packages
   # installed in the base image
   - name: Update all packages
@@ -16,7 +29,7 @@
     shell: locale-gen "en_GB.UTF-8"
 
   - name: Reconfigure locales
-    shell: dpkg-reconfigure locales
+    shell: DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales
 
   - name: Create the project directory.
     file: state=directory path={{ project_root }}
@@ -49,22 +62,54 @@
     file: name=/etc/nginx/sites-enabled/default state=absent
 
   - name: Optimize Postgres for DB import
-    template: src=files/conf/pg_write_heavy.conf dest=/etc/postgresql/9.3/main/postgresql.conf
+    template: src=files/conf/pg_write_heavy.conf dest=/etc/postgresql/9.5/main/postgresql.conf
     when: packer is defined
 
   - name: Optimize Postgres for reads
-    template: src=files/conf/pg_read_heavy.conf dest=/etc/postgresql/9.3/main/postgresql.conf
+    template: src=files/conf/pg_read_heavy.conf dest=/etc/postgresql/9.5/main/postgresql.conf
     when: not packer
 
   - name: Install postgres_hba configuration file.
-    template: src=files/conf/pg_hba.conf dest=/etc/postgresql/9.3/main/pg_hba.conf
+    template: src=files/conf/pg_hba.conf dest=/etc/postgresql/9.5/main/pg_hba.conf
 
   - name: restart postgres
     service: name=postgresql state=restarted
 
-  - name: Install init scripts.
-    template: src=files/init/{{ item }}.conf dest=/etc/init/{{ project_name }}_{{ item }}.conf
+  - name: Install systemd init scripts.
+    template:
+      src: "files/systemd/{{ item }}.service"
+      dest: "/etc/systemd/system/{{ project_name }}_{{ item }}.service"
     with_items: "{{ initfiles }}"
+    notify:
+      - reload systemd
+      - restart web frontend
+
+  - name: Install systemd socket scripts.
+    template:
+      src: "files/systemd/{{ item }}.socket"
+      dest: "/etc/systemd/system/{{ project_name }}_gunicorn.socket"
+    with_items: "{{ initfiles }}"
+    notify:
+      - reload systemd
+      - restart web frontend
+
+  - name: systemd gunicorn tmpfiles.d
+    template:
+      src: "files/systemd/{{ item }}.tmpfiles"
+      dest: "/etc/tmpfiles.d/{{ project_name }}_gunicorn.conf"
+    with_items: "{{ initfiles }}"
+    notify:
+      - reload systemd
+      - restart web frontend
+
+  - name: "enable gunicorn"
+    shell: "systemctl enable {{ project_name }}_gunicorn.socket"
+
+  - name: "start gunicorn"
+    shell: "systemctl start {{ project_name }}_gunicorn.socket"
+    notify:
+      - restart web frontend
+      - restart nginx
 
   - name: Create user.
     postgresql_user:
@@ -85,6 +130,7 @@
 
   handlers:
     - include: handlers.yml
+      static: yes
 
 - include: deploy.yml
   tags: [deploy]
@@ -100,8 +146,3 @@
     - vars.yml
   gather_facts: true
   become: true
-
-  tasks:
-  - name: Restart services.
-    service: name={{ project_name }}_{{ item }} state=restarted
-    with_items: "{{ initfiles }}"

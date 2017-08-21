@@ -1,0 +1,28 @@
+[Unit]
+Description={{ project_name }} gunicorn daemon
+Requires={{ project_name }}_gunicorn.socket
+After=network.target
+
+[Service]
+PIDFile=/run/{{ project_name }}_gunicorn/pid
+User={{ project_name }}
+Group={{ project_name }}
+RuntimeDirectory=gunicorn
+WorkingDirectory={{project_root}}/code/
+
+Environment="PATH={{project_root}}/env/bin:{{ansible_env.PATH}}"
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+PrivateTmp=true
+
+ExecStart={{project_root}}/env/bin/gunicorn {{ app_name }}.wsgi \
+    --pid /run/{{ project_name }}_gunicorn/pid \
+    --workers {{ ansible_processor_cores*2+1 }} \
+    --log-file=/tmp/{{app_name}}.log \
+    --log-level=debug \
+    --env=GEM_HOME="{{ project_root }}/gems" \
+    --env=PATH="{{ project_root }}/env/bin:{{ ansible_env.PATH }}" \
+    --bind=unix:/run/{{ project_name }}_gunicorn/socket
+
+[Install]
+WantedBy=multi-user.target

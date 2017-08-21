@@ -27,8 +27,8 @@ runcmd:
 {% endif %}
   - |
     set -x
-    [ "$(df /mnt/ --output=avail | tail -n1)" -gt "$(sudo du -s /var/lib/postgresql/9.3/main/ | awk '{print $1}')" ] && \
+    [ "$(df /mnt/ --output=avail | tail -n1)" -gt "$(sudo du -s /var/lib/postgresql/9.5/main/ | awk '{print $1}')" ] && \
     service postgresql stop && service nginx stop && \
-    rsync  -a  /var/lib/postgresql/9.3/main/  /mnt/postgres-on-ssd && \
-    perl -pi -e 's{/var/lib/postgresql/9.3/main}{/mnt/postgres-on-ssd}' /etc/postgresql/9.3/main/postgresql.conf && \
+    rsync  -a  /var/lib/postgresql/9.5/main/  /mnt/postgres-on-ssd && \
+    perl -pi -e 's{/var/lib/postgresql/9.5/main}{/mnt/postgres-on-ssd}' /etc/postgresql/9.5/main/postgresql.conf && \
     service postgresql start && service nginx start
