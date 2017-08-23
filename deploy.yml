@@ -73,3 +73,5 @@
   handlers:
     - include: handlers.yml
       static: yes
+
+- include: crontab.yml

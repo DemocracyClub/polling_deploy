@@ -11,6 +11,7 @@ use_logger: 1
 packer: 0
 branch: master
 nickname: production
+cron_email: developers@democracyclub.org.uk
 domains:
     - wheredoivote.co.uk
     - www.wheredoivote.co.uk

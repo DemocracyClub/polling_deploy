@@ -13,6 +13,7 @@
   become: true
   roles:
     - postgresql
+    - every_election
 
   tasks:
 
