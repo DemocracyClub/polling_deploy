@@ -11,6 +11,7 @@ use_logger: 1
 packer: 0
 branch: master
 nickname: production
+cron_email: developers@democracyclub.org.uk
 domains:
     - wheredoivote.co.uk
     - www.wheredoivote.co.uk
@@ -35,13 +36,7 @@ system_packages:
   - nginx
   - opencv-data
   - postfix
-  - postgresql
-  - postgresql-9.5-postgis-2.2
-  - postgresql-client-9.5
-  - postgresql-contrib-9.5
-  - postgresql-server-dev-all
   - python3-dev
-  - python-psycopg2
   - python-setuptools
   - python-virtualenv
   - redis-server

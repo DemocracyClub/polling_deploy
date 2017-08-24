@@ -13,10 +13,6 @@
   become: True
   become_user: root
 
-- name: restart postgres
-  service: name=postgresql state=restart
-  become: True
-
 - name: reload systemd
   become: True
   command: systemctl daemon-reload

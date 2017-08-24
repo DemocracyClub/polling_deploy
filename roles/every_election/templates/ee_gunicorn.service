@@ -1,0 +1,21 @@
+[Unit]
+Description={{ ee_name }} gunicorn daemon
+After=network.target
+
+[Service]
+User={{ ee_name }}
+Group={{ ee_name }}
+RuntimeDirectory=gunicorn
+WorkingDirectory={{ee_project_root}}/code/
+
+Environment="PATH={{ee_project_root}}/env/bin:{{ansible_env.PATH}}"
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+PrivateTmp=true
+
+ExecStart={{ee_project_root}}/env/bin/gunicorn \
+  --workers={{ ansible_processor_cores*2+1 }} \
+   {{ ee_name }}.wsgi
+
+[Install]
+WantedBy=multi-user.target

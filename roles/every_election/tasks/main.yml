@@ -1,0 +1,129 @@
+---
+
+# ensure gather_facts is on
+# so that ansible_env is defined
+- name: gather facts
+  setup:
+
+- name: Install dependencies
+  become: true
+  become_user: root
+  apt:
+    pkg: "{{ item }}"
+    state: installed
+    update-cache: yes
+    cache_valid_time: 43200
+  with_items:
+    - python-virtualenv
+    - s3cmd
+
+- name: Create the project directory.
+  file:
+    state: directory
+    path: "{{ ee_project_root }}"
+
+- name: Create EE user.
+  user:
+    home: "{{ ee_project_root }}/home"
+    name: "{{ ee_name }}"
+    state: present
+
+
+- name: Update the project directory.
+  file:
+    group: "{{ ee_name }}"
+    owner: "{{ ee_name }}"
+    mode: 0755
+    state: directory
+    path: "{{ ee_project_root }}"
+
+- name: Create the code directory.
+  file:
+    group: "{{ ee_name }}"
+    owner: "{{ ee_name }}"
+    mode: 0755
+    state: directory
+    path: "{{ ee_project_root }}/code/"
+
+- name: Pull sources from the repository.
+  git:
+    repo: "{{ ee_project_repo }}"
+    dest: "{{ ee_project_root }}/code/"
+    version: "{{ branch }}"
+    accept_hostkey: true
+  become_user: "{{ ee_name }}"
+  notify:
+    - restart web frontend
+
+- name: Upload configuration.
+  template:
+    src: "django_local_settings.py"
+    dest: "{{ ee_project_root }}/code/{{ ee_name }}/settings/local.py"
+
+
+- name: Upgrade the virtualenv.
+  pip: requirements={{ ee_project_root }}/code/requirements.txt virtualenv={{ ee_project_root }}/env virtualenv_python="python3"
+
+- name: Create user.
+  postgresql_user:
+    name: "{{ ee_name }}"
+    role_attr_flags: "CREATEDB,SUPERUSER"
+
+- name: Create database.
+  postgresql_db:
+    name: "{{ ee_name }}"
+
+
+- name: Install EE database restore script
+  template:
+    src: "load_database_from_s3.sh"
+    dest: "{{ ee_project_root }}/load_database_from_s3.sh"
+    mode: "u+rwx"
+    owner: "{{ ee_name }}"
+
+- name: Restore from EE backup
+  shell: |
+     "{{ ee_project_root }}/load_database_from_s3.sh"
+  args:
+    chdir: "{{ ee_project_root }}"
+    executable: /bin/bash
+
+- name: Install systemd init scripts.
+  template:
+    src: "ee_gunicorn.service"
+    dest: "/etc/systemd/system/ee_gunicorn.service"
+
+- name: systemd gunicorn tmpfiles.d
+  template:
+    src: "ee_gunicorn.tmpfiles"
+    dest: "/etc/tmpfiles.d/ee_gunicorn.conf"
+
+- name: "enable gunicorn"
+  shell: "systemctl enable ee_gunicorn.service"
+
+- name: "start gunicorn"
+  shell: "systemctl start ee_gunicorn.service"
+
+
+- name: Install output on error
+  template:
+    src: files/scripts/output-on-error
+    dest: /usr/local/bin/output-on-error
+    mode: 0777
+  become_user: root
+  become: true
+
+- cronvar:
+    name: MAILTO
+    value: "{{ cron_email }}"
+    user: "{{ ee_name }}"
+
+- name: Schedule sync local EE data from source
+  cron:
+    name: "Sync local EE data from source"
+    minute: 0
+    hour: 4
+    job: "/var/www/{{ ee_name }}/env/bin/python /var/www/{{ ee_name }}/code/manage.py sync_elections"
+    user: "{{ ee_name }}"
+  become_user: root
+  become: true

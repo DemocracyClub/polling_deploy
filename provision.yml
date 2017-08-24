@@ -11,6 +11,9 @@
   # because gather_facts requires python
   gather_facts: false
   become: true
+  roles:
+    - postgresql
+    - every_election
 
   tasks:
 
@@ -61,20 +64,6 @@
   - name: Remove default nginx vhost
     file: name=/etc/nginx/sites-enabled/default state=absent
 
-  - name: Optimize Postgres for DB import
-    template: src=files/conf/pg_write_heavy.conf dest=/etc/postgresql/9.5/main/postgresql.conf
-    when: packer is defined
-
-  - name: Optimize Postgres for reads
-    template: src=files/conf/pg_read_heavy.conf dest=/etc/postgresql/9.5/main/postgresql.conf
-    when: not packer
-
-  - name: Install postgres_hba configuration file.
-    template: src=files/conf/pg_hba.conf dest=/etc/postgresql/9.5/main/pg_hba.conf
-
-  - name: restart postgres
-    service: name=postgresql state=restarted
-
   - name: Install systemd init scripts.
     template:
       src: "files/systemd/{{ item }}.service"
@@ -110,15 +99,6 @@
     notify:
       - restart web frontend
       - restart nginx
-
-  - name: Create user.
-    postgresql_user:
-      name: "{{project_name}}"
-      role_attr_flags: "CREATEDB,SUPERUSER"
-
-  - name: Create database.
-    postgresql_db:
-      name: "{{project_name}}"
 
   - name: Install rsyslog configuration files
     template: src={{item.src}} dest={{item.dst}}
