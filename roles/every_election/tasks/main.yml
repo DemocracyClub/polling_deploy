@@ -104,3 +104,26 @@
 - name: "start gunicorn"
   shell: "systemctl start ee_gunicorn.service"
 
+
+- name: Install output on error
+  template:
+    src: files/scripts/output-on-error
+    dest: /usr/local/bin/output-on-error
+    mode: 0777
+  become_user: root
+  become: true
+
+- cronvar:
+    name: MAILTO
+    value: "{{ cron_email }}"
+    user: "{{ ee_name }}"
+
+- name: Schedule sync local EE data from source
+  cron:
+    name: "Sync local EE data from source"
+    minute: 0
+    hour: 4
+    job: "/var/www/{{ ee_name }}/env/bin/python /var/www/{{ ee_name }}/code/manage.py sync_elections"
+    user: "{{ ee_name }}"
+  become_user: root
+  become: true
