@@ -29,39 +29,21 @@
   - name: Upgrade the virtualenv.
     pip: requirements={{ project_root }}/code/requirements/production.txt virtualenv={{ project_root }}/env virtualenv_python="python3"
 
-  - name: Install SASS
-    gem: name=sass version=3.4.21 state=present user_install=false
-    environment:
-      GEM_HOME: "{{ project_root }}/gems"
-    when: not packer
+  - name: Install front-end dependencies.
+    npm: path={{ project_root }}/code
 
   - name: Migrate Django database.
     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py migrate --noinput"
 
-  - name: Pre-compile CSS/JS.
-    command: "./env/bin/python code/manage.py compilestatic"
-    environment:
-     GEM_HOME: "{{ project_root }}/gems"
-     PATH: "{{ project_root }}/gems/bin:{{ ansible_env.PATH }}"
-    args:
-      chdir: "{{ project_root }}"
-    when: not packer
-
   - name: Generate Django media.
     command: "./env/bin/python code/manage.py collectstatic --noinput"
-    environment:
-     GEM_HOME: "{{ project_root }}/gems"
-     PATH: "{{ project_root }}/gems/bin:{{ ansible_env.PATH }}"
     args:
       chdir: "{{ project_root }}"
     when: not packer
 
   # If we are running via packer (i.e. on an AWS instance with the right permissions) then we can sync the assets to the S3 bucket
   - name: Sync assets to S3 bucket
-    command: "/usr/local/bin/aws s3 sync --cache-control 2592000 --metadata-directive REPLACE --acl public-read --exclude staticfiles.json code/polling_stations/static_root/ s3://pollingstations-assets/ --quiet"
-    environment:
-     GEM_HOME: "{{ project_root }}/gems"
-     PATH: "{{ project_root }}/gems/bin:{{ ansible_env.PATH }}"
+    command: "/usr/local/bin/aws s3 sync --cache-control 2592000 --metadata-directive REPLACE --acl public-read code/polling_stations/static/ s3://pollingstations-assets2/ --quiet"
     args:
       chdir: "{{ project_root }}"
     when: not packer

@@ -40,11 +40,12 @@ DATABASES['logger'] = {
 }
 
 DATABASE_ROUTERS = ['polling_stations.db_routers.LoggerRouter',]
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
-STATIC_PRECOMPILER_DISABLE_AUTO_COMPILE = True
-STATIC_URL = 'https://s3-eu-west-1.amazonaws.com/pollingstations-assets/'
-
 {% endif %}
+
+
+STATIC_URL = 'https://s3-eu-west-1.amazonaws.com/pollingstations-assets2/'
+PIPELINE['SASS_BINARY'] = "/var/www/polling_stations/env/bin/sassc"
+PIPELINE['UGLIFYJS_BINARY'] = '/var/www/polling_stations/code/node_modules/uglify-js/bin/uglifyjs'
 
 
 # We need to also respond to the private IP address of the instance as that's
@@ -77,5 +78,8 @@ CACHES = {
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
+    },
+    "staticfiles": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
     }
 }

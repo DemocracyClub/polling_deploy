@@ -42,6 +42,8 @@ system_packages:
   - redis-server
   - acl
   - unzip
+  - nodejs
+  - npm
 
 python_packages:
   - pip
