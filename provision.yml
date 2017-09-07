@@ -24,6 +24,15 @@
 
   # When building an AMI make sure that we update to the latest of all packages
   # installed in the base image
+
+  - name: Create apt-daily.timer.d directory
+    file: path=/etc/systemd/system/apt-daily.timer.d state=directory
+
+  - name: Prevent systemd daily update race condition
+    template:
+      src: "files/systemd/apt-daily.timer.conf"
+      dest: "/etc/systemd/system/apt-daily.timer.d/apt-daily.timer.conf"
+
   - name: Update all packages
     apt: upgrade=safe
     when: packer is defined
