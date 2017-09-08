@@ -15,9 +15,9 @@
 
   tasks:
 
-  - name: generate a uuid for the image
-    shell: uuidgen
-    register: image_uuid
+  - name: generate an id for the image
+    shell: date +%Y%m%d%H%M%S
+    register: image_id
 
   - name: Pull sources from the repository.
     git:
@@ -48,7 +48,7 @@
 
   # If we are running via packer (i.e. on an AWS instance with the right permissions) then we can sync the assets to the S3 bucket
   - name: Sync assets to S3 bucket
-    command: "/usr/local/bin/aws s3 sync --cache-control 2592000 --metadata-directive REPLACE --acl public-read code/polling_stations/static/ s3://pollingstations-assets2/{{ image_uuid.stdout }}/ --quiet"
+    command: "/usr/local/bin/aws s3 sync --cache-control 2592000 --metadata-directive REPLACE --acl public-read code/polling_stations/static/ s3://pollingstations-assets2/{{ image_id.stdout }}/ --quiet"
     args:
       chdir: "{{ project_root }}"
     when: not packer
