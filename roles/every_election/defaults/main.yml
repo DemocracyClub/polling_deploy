@@ -1,3 +1,4 @@
 ee_name: every_election
 ee_project_root: /var/www/every_election
 ee_project_repo: https://github.com/DemocracyClub/EveryElection.git
+ee_branch: master
