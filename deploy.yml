@@ -30,6 +30,8 @@
 
   - name: Upload configuration.
     template: src=webapp_settings/{{ nickname }}.py dest={{ project_root }}/code/{{ app_name }}/settings/local.py
+    notify:
+      - restart web frontend
 
   - name: Upgrade the virtualenv.
     pip: requirements={{ project_root }}/code/requirements/production.txt virtualenv={{ project_root }}/env virtualenv_python="python3"
