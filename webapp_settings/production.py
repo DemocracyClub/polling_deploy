@@ -68,8 +68,6 @@ MAPIT_URL = "http://mapit.democracyclub.org.uk/"
 MAPIT_UA = "scraper/sym"
 CUSTOM_UA = "DemocracyClub/wheredoivote.co.uk"
 
-EXAMPLE_POSTCODE = "BS4 4NN"
-
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
