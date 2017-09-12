@@ -49,7 +49,7 @@
   git:
     repo: "{{ ee_project_repo }}"
     dest: "{{ ee_project_root }}/code/"
-    version: "{{ branch }}"
+    version: "{{ ee_branch | default(master) }}"
     accept_hostkey: true
   become_user: "{{ ee_name }}"
   notify:
