@@ -9,8 +9,8 @@
             ],
             "Effect": "Allow",
             "Resource": [
-                "arn:aws:s3:::pollingstations-packer-assets",
-                "arn:aws:s3:::pollingstations-packer-assets/*"
+                "arn:aws:s3:::pollingstations-packer-assets2",
+                "arn:aws:s3:::pollingstations-packer-assets2/*"
             ]
         },
         {
@@ -24,8 +24,8 @@
             ],
             "Effect": "Allow",
             "Resource": [
-                "arn:aws:s3:::pollingstations-assets",
-                "arn:aws:s3:::pollingstations-assets/*"
+                "arn:aws:s3:::pollingstations-assets2",
+                "arn:aws:s3:::pollingstations-assets2/*"
             ]
         }
     ]

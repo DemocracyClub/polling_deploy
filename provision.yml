@@ -50,6 +50,9 @@
     apt: pkg={{ item }} state=installed update-cache=yes
     with_items: "{{ system_packages }}"
 
+  - name: symlink /usr/bin/node to /usr/bin/nodejs
+    file: src=/usr/bin/nodejs dest=/usr/bin/node state=link
+
   - name: Install required Python packages.
     easy_install: name={{ item }}
     with_items: "{{ python_packages }}"

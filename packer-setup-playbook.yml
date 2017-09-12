@@ -29,7 +29,7 @@
     # </CORSConfiguration>
     - name: App assets bucket
       s3_bucket:
-        name: pollingstations-assets
+        name: pollingstations-assets2
       register: s3_bucket
 
     - iam:
