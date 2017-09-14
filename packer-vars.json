@@ -1,5 +1,5 @@
 {
-  "database_ami_id": "ami-26aa565f",
-  "imported-db_ami_id": "ami-cec6d4a8",
+  "database_ami_id": "ami-b574b4cc",
+  "imported-db_ami_id": "ami-bddd1ec4",
   "election_regex": "local.2018-05-03"
 }
