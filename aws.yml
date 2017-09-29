@@ -26,7 +26,7 @@
     ami_id: "{{ regions[region].ami_id }}"
     elb_ssl_arn: "arn:aws:iam::225244788755:server-certificate/ps-prod-10"
 
-    lc_num: 46
+    lc_num: 47
     old_lc_num: "{{ lc_num - 1 }}"
     aws_env: "{{ lookup('env', 'ENVIRONMENT') or 'test' }}"
 
@@ -149,7 +149,7 @@
         name: "pollingstations_{{ aws_env }}-{{ lc_num }}"
         assign_public_ip: yes
         image_id: "{{ ami_id }}"
-        instance_type: t2.small
+        instance_type: t2.micro
         instance_profile_name: "arn:aws:iam::225244788755:instance-profile/packer-ami-builder"
         security_groups: ["{{ sg_instance.group_id }}"]
         user_data: "{{lookup('template', 'userdata.yml') }}"
