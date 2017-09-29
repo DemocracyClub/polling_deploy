@@ -36,7 +36,7 @@
     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py clean_addressbase {{ addressbase_tmp_path }}"
 
   - name: Import cleaned addresses
-    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_cleaned_addresses {{ addressbase_tmp_path }}"
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_cleaned_addresses -t addressbase_address {{ addressbase_tmp_path }}"
 
   - name: Delete addressbase tmp files
     file:
