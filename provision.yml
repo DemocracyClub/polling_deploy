@@ -124,6 +124,9 @@
     - include: handlers.yml
       static: yes
 
+- include: drafter.yml
+  when: packer_addressbase is defined
+
 - include: deploy.yml
   tags: [deploy]
 
