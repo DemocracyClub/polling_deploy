@@ -24,15 +24,12 @@
   - name: Create Drafter tmp dir
     file: state=directory path={{ drafter_tmp_path }}
 
-  - name: Download Drafter
-    get_url:
-      url: "{{ drafter_url }}"
+  - name: Download and extract Drafter
+    unarchive:
+      src: "{{ drafter_url }}"
       dest: "{{ drafter_tmp_path }}"
-
-  - name: Extract Drafter
-    shell: "tar xvzf *.tar.gz"
-    args:
-      chdir: "{{ drafter_tmp_path }}"
+      copy: no
+      creates: "{{ drafter_tmp_path }}/drafter-{{ drafter_version }}"
 
   - name: Configure Drafter
     shell: "./configure --shared"
