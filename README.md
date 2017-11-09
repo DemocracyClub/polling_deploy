@@ -29,10 +29,10 @@ Each image is described as a `builders` object in `packer.json`.
 
 ### How to build
 
-If the there is a new AddressBase release or ONSAD release,
+If the there is a new AddressBase release or ONSUD release,
 or if you haven't built it yet then:
 
-#### 1. Fetch latest AddressBase and ONSAD
+#### 1. Fetch latest AddressBase and ONSUD
 
 - Order a new copy from the OS website and download it from their FTP
 - The files will be in a directory named something like DCS0000000000
@@ -40,7 +40,7 @@ or if you haven't built it yet then:
   s3://pollingstations-packer-assets/addressbase/DCS0000000000
 - Replace `addressbase_folder_name` in `vars.yml` with the directory name
   (e.g: DCS0000000000)
-- Replace `onsad_url` in `vars.yml` with the URL for the latest ONSAD release
+- Replace `onsud_url` in `vars.yml` with the URL for the latest ONSUD release
 
 #### 2. Make the image
 
