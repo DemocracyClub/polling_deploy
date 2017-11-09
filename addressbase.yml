@@ -11,7 +11,7 @@
 
   tasks:
   - name: Import Councils
-    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_councils --nosleep"
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_councils"
 
   - name: Set addressbase tmp path
     set_fact:
