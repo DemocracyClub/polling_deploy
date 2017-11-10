@@ -1,0 +1,62 @@
+---
+- hosts: servers
+  vars_files:
+    - vars.yml
+  gather_facts: true
+  become: true
+  become_user: "{{ project_name }}"
+
+  tasks:
+
+  - name: Set Drafter version
+    set_fact:
+      drafter_version: "v3.2.7"
+
+  - name: Set Drafter url
+    set_fact:
+      drafter_url: "https://github.com/apiaryio/drafter/releases/download/{{ drafter_version }}/drafter-{{ drafter_version }}.tar.gz"
+
+  - name: Set Drafter tmp path
+    set_fact:
+      drafter_tmp_path: '/tmp/drafter'
+
+
+  - name: Create Drafter tmp dir
+    file: state=directory path={{ drafter_tmp_path }}
+
+  - name: Download and extract Drafter
+    unarchive:
+      src: "{{ drafter_url }}"
+      dest: "{{ drafter_tmp_path }}"
+      copy: no
+      creates: "{{ drafter_tmp_path }}/drafter-{{ drafter_version }}"
+
+  - name: Configure Drafter
+    shell: "./configure --shared"
+    args:
+      chdir: "{{ drafter_tmp_path }}/drafter-{{ drafter_version }}"
+
+  - name: Compile Drafter
+    shell: "make libdrafter"
+    args:
+      chdir: "{{ drafter_tmp_path }}/drafter-{{ drafter_version }}"
+
+  - name: Install Drafter shared library
+    command: "cp {{ drafter_tmp_path }}/drafter-{{ drafter_version }}/build/out/Release/lib.target/libdrafter.so /usr/lib/libdrafter.so"
+    become: true
+    become_user: root
+
+  - name: Create Drafter headers dir
+    file: state=directory path=/usr/include/drafter/
+    become: true
+    become_user: root
+
+  - name: Install Drafter headers
+    command: "cp {{ drafter_tmp_path }}/drafter-{{ drafter_version }}/src/drafter.h /usr/include/drafter/drafter.h"
+    become: true
+    become_user: root
+
+  - name: Delete Drafter tmp files
+    file:
+      state: absent
+      path: "{{ drafter_tmp_path }}"

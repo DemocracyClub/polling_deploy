@@ -120,9 +120,17 @@
     notify:
       - restart rsyslog
 
+  - name: Check if Libdrafter installed
+    command: test -e /usr/lib/libdrafter.so
+    register: libdrafter_installed
+    ignore_errors: True
+
   handlers:
     - include: handlers.yml
       static: yes
+
+- include: drafter.yml
+  when: libdrafter_installed|failed
 
 - include: deploy.yml
   tags: [deploy]
