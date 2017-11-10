@@ -103,6 +103,9 @@ or if you haven't built it yet then:
   old instances (1 by 1) to make them use new ones.
   - To test a staging deploy, ensure `stage.wheredoivote.co.uk` is pointed at
     the staging load balancer.
+  - Once you've tested a staging build, the cleanest way to decommission the
+    staging instance is to set the desired and minimum number of instances on
+    the `pollingstations-asg-test` ASG to zero.
 
 ### Debugging the build
 
