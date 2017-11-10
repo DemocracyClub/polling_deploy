@@ -11,7 +11,7 @@
 
   tasks:
   - name: Import data
-    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import -e '{{ election_regex }}' -r --multiprocessing --nochecks"
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import -e '{{ election_regex }}' -r --multiprocessing"
     args:
        executable: /bin/bash
        chdir: "{{ project_root }}"
