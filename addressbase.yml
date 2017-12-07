@@ -12,7 +12,7 @@
   tasks:
 
   - name: Import Councils
-    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_councils"
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_councils -u {{ alt_boundaries_url }}"
 
   - name: Set ONSPD tmp path
     set_fact:
