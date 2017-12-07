@@ -91,6 +91,7 @@
       "playbook_file": "./provision.yml",
       "groups":["production", "servers", "remote"],
       "extra_arguments": [
+        "--extra-vars", "use_logger=0",
         "--extra-vars", "nickname=production packer=1 build_region={{ user `build_region` }} packer_addressbase=1 branch={{user `branch`}}",
         "--extra-vars", "@vault.yml"
       ]
