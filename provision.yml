@@ -140,9 +140,3 @@
 
 - include: import_data.yml
   when: packer_import_data is defined
-
-- hosts: servers
-  vars_files:
-    - vars.yml
-  gather_facts: true
-  become: true

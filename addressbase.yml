@@ -10,8 +10,34 @@
   become_user: "{{ project_name }}"
 
   tasks:
+
   - name: Import Councils
-    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_councils"
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_councils -u {{ alt_boundaries_url }}"
+
+  - name: Set ONSPD tmp path
+    set_fact:
+      onspd_tmp_path: '/tmp/onspd'
+
+  - name: Create the ONSPD tmp dir
+    file: state=directory path={{ onspd_tmp_path }}
+
+  - name: Download ONSPD
+    get_url:
+      url: "{{ onspd_url }}"
+      dest: "{{ onspd_tmp_path }}"
+
+  - name: Unzip ONSPD
+    shell: "unzip \\*.zip"
+    args:
+      chdir: "{{ onspd_tmp_path }}"
+
+  - name: Import ONSPD
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_onspd {{ onspd_tmp_path }}/Data"
+
+  - name: Delete ONSPD tmp files
+    file:
+      state: absent
+      path: "{{ onspd_tmp_path }}"
 
   - name: Set addressbase tmp path
     set_fact:
