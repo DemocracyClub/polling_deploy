@@ -60,9 +60,6 @@ ALLOWED_HOSTS = local_ip_addresses + [
 {% if google_maps_api_key %}
 GOOGLE_API_KEY = '{{ google_maps_api_key }}'
 {% endif %}
-{% if vault_mapzen_api_key %}
-MAPZEN_API_KEY = '{{ vault_mapzen_api_key }}'
-{% endif %}
 
 EMAIL_SIGNUP_API_KEY = '{{ vault_email_signup_api_key }}'
 CUSTOM_UA = "DemocracyClub/wheredoivote.co.uk"

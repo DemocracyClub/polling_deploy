@@ -51,8 +51,8 @@
       ],
       "region": "eu-west-1",
       "region":"{{user `build_region` }}",
-      "source_ami": "Comment: ubuntu 16.04 hvm:ebs-ssd 20170811",
-      "source_ami": "ami-674cbc1e",
+      "source_ami": "Comment: ubuntu 16.04 hvm:ebs-ssd 20170109",
+      "source_ami": "ami-4d46d534",
       "ssh_username": "ubuntu",
       "tags": {
         "build_date":"{{isotime}}"
