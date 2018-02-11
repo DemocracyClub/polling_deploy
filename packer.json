@@ -51,8 +51,7 @@
       ],
       "region": "eu-west-1",
       "region":"{{user `build_region` }}",
-      "source_ami": "Comment: ubuntu 16.04 hvm:ebs-ssd 20170109",
-      "source_ami": "ami-4d46d534",
+      "source_ami": "{{user `ubuntu_ami_id`}}",
       "ssh_username": "ubuntu",
       "tags": {
         "build_date":"{{isotime}}"
@@ -73,7 +72,7 @@
       "instance_type":"m4.10xlarge",
       "region": "eu-west-1",
       "region":"{{user `build_region` }}",
-      "source_ami": "{{user `database_ami_id`}}",
+      "source_ami": "{{user `addressbase_ami_id`}}",
       "spot_price": "{{user `max_spot_price`}}",
       "ssh_username": "ubuntu",
       "tags": {
