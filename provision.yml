@@ -112,6 +112,11 @@
       - restart web frontend
       - restart nginx
 
+  - name: Set up handy bashrc file
+    lineinfile:
+      dest: "{{ project_root }}/home/.bashrc"
+      line: 'cd && cd ../code && source ../env/bin/activate'
+
   - name: Install rsyslog configuration files
     template: src={{item.src}} dest={{item.dst}}
     with_items:
