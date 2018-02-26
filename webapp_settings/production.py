@@ -6,6 +6,8 @@ import socket
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
+SECRET_KEY = '{{ vault_django_secret }}'
+
 RAVEN_CONFIG = {
     'dsn': '{{ vault_sentry_dsn }}',
 }
