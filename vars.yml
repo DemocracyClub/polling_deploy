@@ -5,9 +5,9 @@ app_name: polling_stations
 django_media_path: polling_stations
 django_media_root: /var/www/polling_stations-media/media_root
 project_repo: https://github.com/DemocracyClub/UK-Polling-Stations.git
-addressbase_folder_name: DCS0002914854
-onsud_url: https://ons.maps.arcgis.com/sharing/rest/content/items/7a612e9a64bd4bc1adcb6700d20cac96/data
-onspd_url: https://ons.maps.arcgis.com/sharing/rest/content/items/7e76a3bcb0ad4826aba893d252a18c29/data
+addressbase_folder_name: DCS0003044687
+onsud_url: https://s3-eu-west-1.amazonaws.com/ons-cache/onsud/ONSUD_FEB_2018.zip
+onspd_url: https://s3-eu-west-1.amazonaws.com/ons-cache/onspd/ONSPD_FEB_2018_UK.zip
 alt_boundaries_url: https://s3-eu-west-1.amazonaws.com/ons-cache/Local_Authority_Districts_December_2016_Full_Extent_Boundaries_in_the_UK_WGS84.geojson
 use_logger: 1
 packer: 0
@@ -15,13 +15,9 @@ branch: master
 nickname: production
 cron_email: developers@democracyclub.org.uk
 domains:
-    - wheredoivote.co.uk
-    - www.wheredoivote.co.uk
-    - pollingstations.democracyclub.org.uk
-    - wheredoivote.wales
-    - wheredoivote.cymru
-    - bleibleidleisio.wales
-    - bleibleidleisio.cymru
+  - wheredoivote.co.uk
+  - www.wheredoivote.co.uk
+  - pollingstations.democracyclub.org.uk
 system_packages:
   - build-essential
   - bundler
