@@ -15,13 +15,9 @@ branch: master
 nickname: production
 cron_email: developers@democracyclub.org.uk
 domains:
-    - wheredoivote.co.uk
-    - www.wheredoivote.co.uk
-    - pollingstations.democracyclub.org.uk
-    - wheredoivote.wales
-    - wheredoivote.cymru
-    - bleibleidleisio.wales
-    - bleibleidleisio.cymru
+  - wheredoivote.co.uk
+  - www.wheredoivote.co.uk
+  - pollingstations.democracyclub.org.uk
 system_packages:
   - build-essential
   - bundler
