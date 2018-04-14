@@ -6,7 +6,7 @@ django_media_path: polling_stations
 django_media_root: /var/www/polling_stations-media/media_root
 project_repo: https://github.com/DemocracyClub/UK-Polling-Stations.git
 addressbase_folder_name: DCS0003092805
-onsud_url: https://s3-eu-west-1.amazonaws.com/ons-cache/onsud/ONSUD_FEB_2018.zip
+onsud_url: https://s3-eu-west-1.amazonaws.com/ons-cache/onsud/ONSUD_APR_2018.zip
 onspd_url: https://s3-eu-west-1.amazonaws.com/ons-cache/onspd/ONSPD_FEB_2018_UK.zip
 alt_boundaries_url: https://s3-eu-west-1.amazonaws.com/ons-cache/Local_Authority_Districts_December_2016_Full_Extent_Boundaries_in_the_UK_WGS84.geojson
 use_logger: 1
