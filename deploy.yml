@@ -43,7 +43,7 @@
     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py migrate --noinput"
 
   - name: Generate Django media.
-    command: "./env/bin/python code/manage.py collectstatic --noinput"
+    command: "./env/bin/python code/manage.py collectstatic --noinput --clear"
     args:
       chdir: "{{ project_root }}"
     when: not packer
