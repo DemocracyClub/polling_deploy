@@ -16,7 +16,7 @@
     region: "{{ lookup('env', 'AWS_REGION') or 'eu-west-1' }}"
     regions:
       eu-west-1:
-        ami_id: ami-67d8f01e
+        ami_id: ami-3f87ac46
         # The default VPC
         vpc_id: vpc-e2c30986
       # eu-central-1:
@@ -26,7 +26,7 @@
     ami_id: "{{ regions[region].ami_id }}"
     elb_ssl_arn: "arn:aws:acm:eu-west-1:225244788755:certificate/029b3eed-b3d9-403b-9cbf-ec8077f62a6b"
 
-    lc_num: 85
+    lc_num: 86
     old_lc_num: "{{ lc_num - 1 }}"
     aws_env: "{{ lookup('env', 'ENVIRONMENT') or 'test' }}"
 
@@ -145,7 +145,7 @@
         name: "pollingstations_{{ aws_env }}-{{ lc_num }}"
         assign_public_ip: yes
         image_id: "{{ ami_id }}"
-        instance_type: m5.large
+        instance_type: t2.micro
         instance_profile_name: "arn:aws:iam::225244788755:instance-profile/packer-ami-builder"
         security_groups: ["{{ sg_instance.group_id }}"]
         user_data: "{{lookup('template', 'userdata.yml') }}"
@@ -159,12 +159,12 @@
         tags:
           - Env: "{{ aws_env }}"
             Name: pollingstations-asg
-        desired_capacity: 4
+        desired_capacity: 1
         health_check_type: ELB
         launch_config_name: "{{launchconfig.name}}"
         load_balancers: ["{{ elb_result.elb.name }}"]
         max_size: 10
-        min_size: 4
+        min_size: 1
         replace_all_instances: "{{ replace_all|default(False) }}"
         termination_policies: [ OldestLaunchConfiguration, ClosestToNextInstanceHour ]
         # Yes, subnets go in vpc_zone_identifier. Blame Garethr.
