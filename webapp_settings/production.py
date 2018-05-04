@@ -65,8 +65,6 @@ GOOGLE_API_KEY = '{{ google_maps_api_key }}'
 EMAIL_SIGNUP_API_KEY = '{{ vault_email_signup_api_key }}'
 CUSTOM_UA = "DemocracyClub/wheredoivote.co.uk"
 
-EE_BASE = 'http://localhost:8000/'
-
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
