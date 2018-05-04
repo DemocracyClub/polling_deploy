@@ -16,7 +16,7 @@
     region: "{{ lookup('env', 'AWS_REGION') or 'eu-west-1' }}"
     regions:
       eu-west-1:
-        ami_id: ami-67d8f01e
+        ami_id: ami-3f87ac46
         # The default VPC
         vpc_id: vpc-e2c30986
       # eu-central-1:
@@ -26,7 +26,7 @@
     ami_id: "{{ regions[region].ami_id }}"
     elb_ssl_arn: "arn:aws:acm:eu-west-1:225244788755:certificate/029b3eed-b3d9-403b-9cbf-ec8077f62a6b"
 
-    lc_num: 85
+    lc_num: 86
     old_lc_num: "{{ lc_num - 1 }}"
     aws_env: "{{ lookup('env', 'ENVIRONMENT') or 'test' }}"
 
