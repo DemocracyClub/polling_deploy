@@ -32,7 +32,7 @@
       chdir: "{{ onspd_tmp_path }}"
 
   - name: Import ONSPD
-    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_onspd \"{{ onspd_tmp_path }}/Data/New Order\""
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_onspd \"{{ onspd_tmp_path }}/Data\""
 
   - name: Delete ONSPD tmp files
     file:
