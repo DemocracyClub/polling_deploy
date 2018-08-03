@@ -12,6 +12,7 @@
   gather_facts: false
   become: true
   roles:
+    - dc_commonscripts
     - postgresql
     - every_election
 

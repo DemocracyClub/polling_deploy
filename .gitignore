@@ -2,3 +2,4 @@
 .vault_pass.txt
 *.retry
 packer-user-vars.json
+vendor/*
