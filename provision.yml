@@ -1,27 +1,35 @@
 ---
 - hosts: servers
+  # gather facts needs to be off until we've run pre_tasks
+  # because gather_facts requires python
+  gather_facts: false
+
   pre_tasks:
     - name: Install python for Ansible
       raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal aptitude)
       register: output
       changed_when: 'output.stdout != ""'
+
+    # turn gather_facts back on
+    # so that ansible_env is defined
+    - name: gather facts
+      setup: filter=ansible_*
+
   vars_files:
     - vars.yml
-  # gather facts needs to be off until we've run pre_tasks
-  # because gather_facts requires python
-  gather_facts: false
+
   become: true
   roles:
-    - dc_commonscripts
-    - postgresql
-    - every_election
+    - role: dc_commonscripts
+
+    - role: dc_papertrail
+      papertrail_log_destination: "{{ vault_papertrail_url }}"
+
+    - role: postgresql
+
+    - role: every_election
 
   tasks:
-
-  # turn gather_facts back on
-  # so that ansible_env is defined
-  - name: gather facts
-    setup:
 
   # When building an AMI make sure that we update to the latest of all packages
   # installed in the base image
@@ -117,14 +125,6 @@
     lineinfile:
       dest: "{{ project_root }}/home/.bashrc"
       line: 'cd && cd ../code && source ../env/bin/activate'
-
-  - name: Install rsyslog configuration files
-    template: src={{item.src}} dest={{item.dst}}
-    with_items:
-      - { 'src': 'files/conf/rsyslog/rsyslog.conf', 'dst': '/etc/rsyslog.conf' }
-      - { 'src': 'files/conf/rsyslog/nginx.conf', 'dst': '/etc/rsyslog.d/nginx.conf' }
-    notify:
-      - restart rsyslog
 
   - name: Check if Libdrafter installed
     command: test -e /usr/lib/libdrafter.so

@@ -3,3 +3,7 @@
 - src: https://github.com/DemocracyClub/ansible-role-commonscripts
   version: 1.0.0
   name: dc_commonscripts
+
+- src: https://github.com/DemocracyClub/ansible-role-papertrail
+  version: 1.0.0
+  name: dc_papertrail

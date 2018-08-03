@@ -16,7 +16,3 @@
 - name: reload systemd
   become: True
   command: systemctl daemon-reload
-
-- name: restart rsyslog
-  service: name=rsyslog state=restarted
-  become: True
