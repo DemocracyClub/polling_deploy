@@ -4,6 +4,7 @@
     "build_region": "eu-west-1",
     "regions_to_copy_to": "eu-central-1",
     "branch": "master",
+    "app_name": "wdiv",
     "max_spot_price": "0.3",
     "ssh_private_key_file": null,
     "election_regex": null
@@ -25,10 +26,20 @@
       "spot_price": "{{ user `max_spot_price`}}",
       "ssh_username": "ubuntu",
       "tags": {
+        "application": "{{user `app_name` }}",
         "build_date":"{{isotime}}"
       },
       "run_tags": {
+        "application": "{{user `app_name` }}",
         "Name": "packer-ami-build"
+      },
+      "run_volume_tags": {
+        "application": "{{user `app_name` }}",
+        "build_date":"{{isotime}}"
+      },
+      "snapshot_tags": {
+        "application": "{{user `app_name` }}",
+        "build_date":"{{isotime}}"
       }
     },
     {
@@ -54,10 +65,20 @@
       "source_ami": "{{user `ubuntu_ami_id`}}",
       "ssh_username": "ubuntu",
       "tags": {
+        "application": "{{user `app_name` }}",
         "build_date":"{{isotime}}"
       },
       "run_tags": {
+        "application": "{{user `app_name` }}",
         "Name": "packer-ami-build"
+      },
+      "run_volume_tags": {
+        "application": "{{user `app_name` }}",
+        "build_date":"{{isotime}}"
+      },
+      "snapshot_tags": {
+        "application": "{{user `app_name` }}",
+        "build_date":"{{isotime}}"
       }
     },
     {
@@ -76,10 +97,20 @@
       "spot_price": "{{user `max_spot_price`}}",
       "ssh_username": "ubuntu",
       "tags": {
+        "application": "{{user `app_name` }}",
         "build_date":"{{isotime}}"
       },
       "run_tags": {
+        "application": "{{user `app_name` }}",
         "Name": "packer-ami-build"
+      },
+      "run_volume_tags": {
+        "application": "{{user `app_name` }}",
+        "build_date":"{{isotime}}"
+      },
+      "snapshot_tags": {
+        "application": "{{user `app_name` }}",
+        "build_date":"{{isotime}}"
       }
     }
   ],
