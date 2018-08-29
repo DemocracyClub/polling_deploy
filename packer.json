@@ -27,6 +27,7 @@
       "ssh_username": "ubuntu",
       "tags": {
         "application": "{{user `app_name` }}",
+        "build_step": "server",
         "build_date":"{{isotime}}"
       },
       "run_tags": {
@@ -35,10 +36,12 @@
       },
       "run_volume_tags": {
         "application": "{{user `app_name` }}",
+        "build_step": "server",
         "build_date":"{{isotime}}"
       },
       "snapshot_tags": {
         "application": "{{user `app_name` }}",
+        "build_step": "server",
         "build_date":"{{isotime}}"
       }
     },
@@ -66,6 +69,7 @@
       "ssh_username": "ubuntu",
       "tags": {
         "application": "{{user `app_name` }}",
+        "build_step": "addressbase",
         "build_date":"{{isotime}}"
       },
       "run_tags": {
@@ -74,10 +78,12 @@
       },
       "run_volume_tags": {
         "application": "{{user `app_name` }}",
+        "build_step": "addressbase",
         "build_date":"{{isotime}}"
       },
       "snapshot_tags": {
         "application": "{{user `app_name` }}",
+        "build_step": "addressbase",
         "build_date":"{{isotime}}"
       }
     },
@@ -98,6 +104,7 @@
       "ssh_username": "ubuntu",
       "tags": {
         "application": "{{user `app_name` }}",
+        "build_step": "imported-db",
         "build_date":"{{isotime}}"
       },
       "run_tags": {
@@ -106,10 +113,12 @@
       },
       "run_volume_tags": {
         "application": "{{user `app_name` }}",
+        "build_step": "imported-db",
         "build_date":"{{isotime}}"
       },
       "snapshot_tags": {
         "application": "{{user `app_name` }}",
+        "build_step": "imported-db",
         "build_date":"{{isotime}}"
       }
     }
