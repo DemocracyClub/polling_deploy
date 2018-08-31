@@ -1,7 +1,24 @@
 from .base import *
+from ec2_tag_conditional.util import InstanceTags
 import os
 import raven
 import socket
+
+
+def get_env():
+    tags = InstanceTags()
+    server_env = None
+    if tags['Env']:
+        server_env = tags['Env']
+
+    if server_env not in ['test', 'prod', 'packer-ami-build']:
+        # if we can't work out our environment, don't attempt to guess
+        # fail to bootstrap the application and complain loudly about it
+        raise Exception('Failed to infer a valid environment')
+    return server_env
+
+
+# settings that are the same across all instance types
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -30,33 +47,12 @@ DATABASES = {
         'PORT': '',
     },
 }
-
-{% if use_logger %}
-DATABASES['logger'] = {
-    'ENGINE': 'django.contrib.gis.db.backends.postgis',
-    'NAME': 'logger_prod',
-    'USER': 'polling_stations',
-    'PASSWORD': '{{ logger_prod_password }}',
-    'HOST': 'logger-prod.c0jvejtwfveq.eu-west-1.rds.amazonaws.com',
-    'PORT': '5432',
-}
-
 DATABASE_ROUTERS = ['polling_stations.db_routers.LoggerRouter',]
-{% endif %}
 
 
 STATIC_URL = 'https://s3-eu-west-1.amazonaws.com/pollingstations-assets2/{{ image_id.stdout }}/'
 PIPELINE['SASS_BINARY'] = "/var/www/polling_stations/env/bin/sassc"
 
-
-# We need to also respond to the private IP address of the instance as that's
-# what the ELB will send healthcheck requests to
-local_ip_addresses = [(s.connect(('8.8.8.8', 53)), s.getsockname()[0], s.close())[1] for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]]
-ALLOWED_HOSTS = local_ip_addresses + [
-    {% for domain in domains %}
-    "{{ domain }}",
-    {% endfor %}
-]
 
 {% if google_maps_api_key %}
 GOOGLE_API_KEY = '{{ google_maps_api_key }}'
@@ -74,3 +70,52 @@ CACHES = {
         }
     }
 }
+
+
+# infer environment from the EC2 tags
+SERVER_ENVIRONMENT = get_env()
+
+
+# settings that are conditional on env
+
+RAVEN_CONFIG['environment'] = SERVER_ENVIRONMENT
+
+
+local_ip_addresses = [(s.connect(('8.8.8.8', 53)), s.getsockname()[0], s.close())[1] for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]]
+if SERVER_ENVIRONMENT == 'packer-ami-build':
+    ALLOWED_HOSTS = ['*']
+if SERVER_ENVIRONMENT == 'test':
+    ALLOWED_HOSTS = local_ip_addresses + [
+        "stage.wheredoivote.co.uk",
+    ]
+if SERVER_ENVIRONMENT == 'prod':
+    ALLOWED_HOSTS = local_ip_addresses + [
+        {% for domain in domains %}
+        "{{ domain }}",
+        {% endfor %}
+    ]
+
+
+if SERVER_ENVIRONMENT in ['prod', 'test']:
+    DATABASES['logger'] = {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'USER': 'polling_stations',
+        'PASSWORD': '{{ logger_prod_password }}',
+        'HOST': 'logger-prod.c0jvejtwfveq.eu-west-1.rds.amazonaws.com',
+        'PORT': '5432',
+    }
+    if SERVER_ENVIRONMENT == 'prod':
+        DATABASES['logger']['NAME'] = 'logger_prod'
+    if SERVER_ENVIRONMENT == 'test':
+        DATABASES['logger']['NAME'] = 'logger_staging'
+
+
+if SERVER_ENVIRONMENT == 'test':
+    BASICAUTH_DISABLE = False
+    BASICAUTH_REALM = 'Staging'
+    BASICAUTH_USERS = {
+        'staging': 'staging'
+    }
+    BASICAUTH_ALWAYS_ALLOW_URLS = [
+        r'^/example/$',
+    ]

@@ -15,12 +15,3 @@ users:
     shell: /bin/bash
     ssh-authorized-keys:
       - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDP700VjbnTIwRnOemtcJJGPr0Pgq8gOwhR4SVBR/50RVGddX7Jw9XqW8wMNmI93xZPV5YR5JfMlnvaMfAgHD1zdSBPs1lbx8MZahbVgBQTirLaHorjglzUXTBzLnnopC8DVt4IwFuh3vR71+rVn3vum8/fJAI7ISdBdkcDxHkv4zIa3I+sQ22YmflnzpJA/l1A7WJYTQUjLiDElijWHHwMQv86SBpxsHN3u3nEyaylrINDI3L4FTTnBWX+fF/Hxaobn98xiCas8Ho8Ecmvy/ZbP+GS7fJeKZmQCm0ROSCJ1LdAAydprAfYwMG8vPnut3fO7/8MxyT0PbYiiG4I9z7P chris@leonard"
-
-# These are run one per instance lifetime, not once per boot
-runcmd:
-{% if aws_env == 'test' %}
-  - "perl -pi -e 's{wheredoivote.co.uk}{stage.wheredoivote.co.uk}' /etc/nginx/sites-enabled/polling_stations"
-  - "perl -pi -e 's{wheredoivote.co.uk}{stage.wheredoivote.co.uk}' /var/www/polling_stations/code/polling_stations/settings/local.py"
-  - "service nginx restart"
-  - "service polling_stations_gunicorn restart"
-{% endif %}

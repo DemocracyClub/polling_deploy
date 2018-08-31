@@ -32,7 +32,8 @@
       },
       "run_tags": {
         "application": "{{user `app_name` }}",
-        "Name": "packer-ami-build"
+        "Name": "packer-ami-build",
+        "Env": "packer-ami-build"
       },
       "run_volume_tags": {
         "application": "{{user `app_name` }}",
@@ -74,7 +75,8 @@
       },
       "run_tags": {
         "application": "{{user `app_name` }}",
-        "Name": "packer-ami-build"
+        "Name": "packer-ami-build",
+        "Env": "packer-ami-build"
       },
       "run_volume_tags": {
         "application": "{{user `app_name` }}",
@@ -109,7 +111,8 @@
       },
       "run_tags": {
         "application": "{{user `app_name` }}",
-        "Name": "packer-ami-build"
+        "Name": "packer-ami-build",
+        "Env": "packer-ami-build"
       },
       "run_volume_tags": {
         "application": "{{user `app_name` }}",
@@ -130,7 +133,6 @@
       "playbook_file": "./provision.yml",
       "groups":["production", "servers", "remote"],
       "extra_arguments": [
-        "--extra-vars", "use_logger=0",
         "--extra-vars", "nickname=production packer=1 build_region={{ user `build_region` }} packer_addressbase=1 branch={{user `branch`}}",
         "--extra-vars", "@vault.yml"
       ]
@@ -141,7 +143,6 @@
       "playbook_file": "./deploy.yml",
       "groups":["production", "servers", "remote"],
       "extra_arguments": [
-        "--extra-vars", "use_logger=0",
         "--extra-vars", "nickname=production packer=1 branch={{user `branch`}} vault_logger_prod_password=dummy",
         "--extra-vars", "@vault.yml"
       ]
@@ -155,7 +156,6 @@
         "-vv",
         "--extra-vars", "nickname=production packer=1 packer_import_data=1",
         "--extra-vars", "election_regex={{ user `election_regex` }} branch={{user `branch`}}",
-        "--extra-vars", "use_logger=0",
         "--extra-vars", "@vault.yml"
       ]
     },
@@ -168,7 +168,6 @@
         "-vv",
         "--extra-vars", "nickname=production",
         "--extra-vars", "branch={{user `branch`}}",
-        "--extra-vars", "use_logger=1",
         "--extra-vars", "@vault.yml"
       ]
     },
