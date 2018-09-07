@@ -43,8 +43,10 @@ system_packages:
   - npm
 
 python_packages:
+  - awscli
+  - ec2_tag_conditional
   - pip
   - virtualenv
-  - awscli
+
 initfiles:
   - gunicorn

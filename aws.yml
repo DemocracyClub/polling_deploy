@@ -97,10 +97,10 @@
         health_check:
           ping_protocol: http
           ping_port: 80
-          ping_path: "/example/"
+          ping_path: "/status_check/"
           response_timeout: 2
-          interval: 60
-          unhealthy_threshold: 5
+          interval: 100
+          unhealthy_threshold: 10
           healthy_threshold: 2
         subnets: "{{ subnets.subnets | map(attribute='id') |list }}"
         tags:
@@ -137,7 +137,7 @@
         # Yes, subnets go in vpc_zone_identifier. Blame Garethr.
         vpc_zone_identifier: "{{ subnets.subnets | map(attribute='id') |list }}"
         # Wait for this long to replace old instances
-        wait_timeout: 600
+        wait_timeout: 1200
       when: spot_price is defined
 
     - name: On-demand Launch Config
@@ -169,8 +169,13 @@
         termination_policies: [ OldestLaunchConfiguration, ClosestToNextInstanceHour ]
         # Yes, subnets go in vpc_zone_identifier. Blame Garethr.
         vpc_zone_identifier: "{{ subnets.subnets | map(attribute='id') |list }}"
-        # Wait for this long to replace old instances
-        wait_timeout: 600
+
+        # This timeout is quite long (20 mins) because we need to:
+        # - boot a server (a few mins),
+        # - run init_db.sh (which takes ~12 mins),
+        # - wait for it to pass 2 health checks (could be another 3 mins)
+        wait_timeout: 1200
+
       when: not spot_price is defined
 
 

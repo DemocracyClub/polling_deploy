@@ -1,0 +1,31 @@
+---
+- hosts: all
+  vars_files:
+    - vars.yml
+  gather_facts: true
+  become: true
+  become_user: "{{ project_name }}"
+  tasks:
+
+  - cronvar:
+      name: MAILTO
+      value: "{{ cron_email }}"
+      user: "{{ project_name }}"
+
+  - name: Install init_db.sh script
+    template:
+      src: "files/init_db.sh"
+      dest: "~/init_db.sh"
+      mode: 0744
+
+  - name: Schedule Initialize DB task
+    cron:
+      name: "Initialize DB"
+      job: "/usr/local/bin/output-on-error ~/init_db.sh"
+      user: "{{ project_name }}"
+      special_time: reboot
+    become_user: "{{ project_name }}"
+    become: true
+
+  - name: Ensure 'clean' file doesn't exist
+    file: path={{ project_root }}/home/clean state=absent

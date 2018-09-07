@@ -117,5 +117,5 @@ if SERVER_ENVIRONMENT == 'test':
         'staging': 'staging'
     }
     BASICAUTH_ALWAYS_ALLOW_URLS = [
-        r'^/example/$',
+        r'^/status_check/$',
     ]
