@@ -39,7 +39,7 @@ system_packages:
   - redis-server
   - acl
   - unzip
-  - nodejs
+  - nodejs-legacy
   - npm
 
 python_packages:
