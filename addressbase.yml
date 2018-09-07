@@ -92,6 +92,3 @@
     file:
       state: absent
       path: "{{ onsud_tmp_path }}"
-
-  - name: hoover postgres
-    shell: "psql -c 'VACUUM ANALYZE;'"
