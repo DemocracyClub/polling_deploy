@@ -143,3 +143,6 @@
 
 - include: import_data.yml
   when: packer_import_data is defined
+
+- include: init_db.yml
+  when: not packer

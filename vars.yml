@@ -17,10 +17,12 @@ domains:
   - wheredoivote.co.uk
   - www.wheredoivote.co.uk
   - pollingstations.democracyclub.org.uk
+
 system_packages:
   - build-essential
   - bundler
   - curl
+  - fio
   - gettext
   - git
   - libevent-dev
@@ -43,8 +45,10 @@ system_packages:
   - npm
 
 python_packages:
+  - awscli
+  - ec2_tag_conditional
   - pip
   - virtualenv
-  - awscli
+
 initfiles:
   - gunicorn

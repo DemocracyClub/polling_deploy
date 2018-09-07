@@ -16,7 +16,7 @@
     region: "{{ lookup('env', 'AWS_REGION') or 'eu-west-1' }}"
     regions:
       eu-west-1:
-        ami_id: ami-0b82ccb04881d4fde
+        ami_id: ami-0ef54ad8672a09290
         # The default VPC
         vpc_id: vpc-e2c30986
       # eu-central-1:
@@ -26,7 +26,7 @@
     ami_id: "{{ regions[region].ami_id }}"
     elb_ssl_arn: "arn:aws:acm:eu-west-1:225244788755:certificate/029b3eed-b3d9-403b-9cbf-ec8077f62a6b"
 
-    lc_num: 88
+    lc_num: 90
     old_lc_num: "{{ lc_num - 1 }}"
     aws_env: "{{ lookup('env', 'ENVIRONMENT') or 'test' }}"
 
@@ -97,10 +97,10 @@
         health_check:
           ping_protocol: http
           ping_port: 80
-          ping_path: "/example/"
+          ping_path: "/status_check/"
           response_timeout: 2
-          interval: 60
-          unhealthy_threshold: 5
+          interval: 100
+          unhealthy_threshold: 10
           healthy_threshold: 2
         subnets: "{{ subnets.subnets | map(attribute='id') |list }}"
         tags:
@@ -137,7 +137,7 @@
         # Yes, subnets go in vpc_zone_identifier. Blame Garethr.
         vpc_zone_identifier: "{{ subnets.subnets | map(attribute='id') |list }}"
         # Wait for this long to replace old instances
-        wait_timeout: 600
+        wait_timeout: 1200
       when: spot_price is defined
 
     - name: On-demand Launch Config
@@ -145,7 +145,7 @@
         name: "pollingstations_{{ aws_env }}-{{ lc_num }}"
         assign_public_ip: yes
         image_id: "{{ ami_id }}"
-        instance_type: t2.micro
+        instance_type: t3.micro
         instance_profile_name: "arn:aws:iam::225244788755:instance-profile/packer-ami-builder"
         security_groups: ["{{ sg_instance.group_id }}"]
         user_data: "{{lookup('template', 'userdata.yml') }}"
@@ -169,8 +169,13 @@
         termination_policies: [ OldestLaunchConfiguration, ClosestToNextInstanceHour ]
         # Yes, subnets go in vpc_zone_identifier. Blame Garethr.
         vpc_zone_identifier: "{{ subnets.subnets | map(attribute='id') |list }}"
-        # Wait for this long to replace old instances
-        wait_timeout: 600
+
+        # This timeout is quite long (20 mins) because we need to:
+        # - boot a server (a few mins),
+        # - run init_db.sh (which takes ~12 mins),
+        # - wait for it to pass 2 health checks (could be another 3 mins)
+        wait_timeout: 1200
+
       when: not spot_price is defined
 
 
