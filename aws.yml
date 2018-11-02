@@ -24,7 +24,7 @@
       #   vpc_id: vpc-1e467077
     vpc_id: "{{ regions[region].vpc_id }}"
     ami_id: "{{ regions[region].ami_id }}"
-    elb_ssl_arn: "arn:aws:acm:eu-west-1:225244788755:certificate/029b3eed-b3d9-403b-9cbf-ec8077f62a6b"
+    elb_ssl_arn: "arn:aws:acm:eu-west-1:225244788755:certificate/f550f331-59f8-4318-a91d-2384d0b6c23f"
 
     lc_num: 90
     old_lc_num: "{{ lc_num - 1 }}"
