@@ -60,5 +60,4 @@
     when: not packer
 
   handlers:
-    - include: handlers.yml
-      static: yes
+    - import_tasks: handlers.yml

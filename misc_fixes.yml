@@ -22,5 +22,4 @@
       chdir: "{{ project_root }}/code/"
 
   handlers:
-    - include: handlers.yml
-      static: yes
+    - import_tasks: handlers.yml

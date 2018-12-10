@@ -1,3 +1,0 @@
-# Requirements needed to run the ansible playbooks in this dir. Boto is only needed for aws.yml and packer-setup-playbook.yml
-boto==2.49.0
-ansible==2.1.0.0

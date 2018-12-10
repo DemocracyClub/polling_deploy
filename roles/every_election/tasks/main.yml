@@ -9,13 +9,14 @@
   become: true
   become_user: root
   apt:
-    pkg: "{{ item }}"
-    state: installed
+    name:
+      - build-essential
+      - python3-dev
+      - python-virtualenv
+      - s3cmd
+    state: present
     update-cache: yes
     cache_valid_time: 43200
-  with_items:
-    - python-virtualenv
-    - s3cmd
 
 - name: Create the project directory.
   file:

@@ -65,8 +65,10 @@
     file: group={{ project_name }} owner={{ project_name }} mode=755 state=directory path={{ project_root }}/code/
 
   - name: Install required system packages.
-    apt: pkg={{ item }} state=installed update-cache=yes
-    with_items: "{{ system_packages }}"
+    apt:
+      name: "{{ system_packages }}"
+      state: present
+      update_cache: yes
 
   - name: Install required Python packages.
     easy_install: name={{ item }}
@@ -129,20 +131,19 @@
     ignore_errors: True
 
   handlers:
-    - include: handlers.yml
-      static: yes
+    - import_tasks: handlers.yml
 
-- include: drafter.yml
-  when: libdrafter_installed|failed
+- import_playbook: drafter.yml
+  when: libdrafter_installed is failed
 
-- include: deploy.yml
+- import_playbook: deploy.yml
   tags: [deploy]
 
-- include: addressbase.yml
+- import_playbook: addressbase.yml
   when: packer_addressbase is defined
 
-- include: import_data.yml
+- import_playbook: import_data.yml
   when: packer_import_data is defined
 
-- include: init_db.yml
+- import_playbook: init_db.yml
   when: not packer

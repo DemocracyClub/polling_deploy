@@ -2,7 +2,7 @@
 
 ## Setup
 
-- `pip install -r requirements.txt`
+- `pipenv install`
 - `ansible-galaxy install -r requirements.yml`
 - Ensure your AWS credentials are in `~/.aws/credentials`
 - `cp packer-user-vars.example.json packer-user-vars.json` and fill in the path to your private key file

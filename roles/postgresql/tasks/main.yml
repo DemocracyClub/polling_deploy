@@ -3,17 +3,16 @@
   become: true
   become_user: root
   apt:
-    pkg: "{{ item }}"
-    state: installed
+    name:
+      - postgresql
+      - postgresql-9.5-postgis-2.2
+      - postgresql-client-9.5
+      - postgresql-contrib-9.5
+      - postgresql-server-dev-all
+      - python-psycopg2
+    state: present
     update-cache: yes
     cache_valid_time: 43200
-  with_items:
-    - postgresql
-    - postgresql-9.5-postgis-2.2
-    - postgresql-client-9.5
-    - postgresql-contrib-9.5
-    - postgresql-server-dev-all
-    - python-psycopg2
 
 - name: Optimize Postgres for DB import
   template: src=files/conf/pg_write_heavy.conf dest=/etc/postgresql/9.5/main/postgresql.conf
