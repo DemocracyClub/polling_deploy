@@ -56,7 +56,11 @@
     file: state=directory path={{ project_root }}
 
   - name: Create user.
-    user: home={{ project_root }}/home/ name={{ project_name }} state=present
+    user:
+      home: "{{ project_root }}/home"
+      name: "{{ project_name }}"
+      shell: "/bin/bash"
+      state: present
 
   - name: Update the project directory.
     file: group={{ project_name }} owner={{ project_name }} mode=755 state=directory path={{ project_root }}
@@ -71,8 +75,9 @@
       update_cache: yes
 
   - name: Install required Python packages.
-    easy_install: name={{ item }}
-    with_items: "{{ python_packages }}"
+    pip:
+      name: "{{ python_packages }}"
+      executable: /usr/bin/pip3
 
   - name: Change permissions.
     shell: chown -R {{ project_name }}:{{ project_name }} {{ project_root }}

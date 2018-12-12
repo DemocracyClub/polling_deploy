@@ -19,6 +19,7 @@ domains:
   - pollingstations.democracyclub.org.uk
 
 system_packages:
+  - acl
   - build-essential
   - bundler
   - curl
@@ -29,25 +30,22 @@ system_packages:
   - libffi-dev
   - libjpeg-dev
   - libpq-dev
-  - libssl-dev
   - libxml2-dev
   - libxslt1-dev
   - nginx
+  - nodejs
+  - npm
   - opencv-data
   - postfix
   - python3-dev
-  - python-setuptools
-  - python-virtualenv
+  - python3-pip
+  - python3-virtualenv
   - redis-server
-  - acl
   - unzip
-  - nodejs-legacy
-  - npm
 
 python_packages:
   - awscli
   - ec2_tag_conditional
-  - pip
   - virtualenv
 
 initfiles:
