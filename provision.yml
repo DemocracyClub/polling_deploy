@@ -74,6 +74,12 @@
       state: present
       update_cache: yes
 
+  - name: Upgrade NPM
+    npm:
+      name: npm
+      global: true
+      state: latest
+
   - name: Install required Python packages.
     pip:
       name: "{{ python_packages }}"
