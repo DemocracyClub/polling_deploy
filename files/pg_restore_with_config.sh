@@ -1,6 +1,6 @@
 #!/bin/bash
 
-conf_dir=/etc/postgresql/9.5/main
+conf_dir=/etc/postgresql/10/main
 main_config=$conf_dir/postgresql.conf
 
 mkdir -p "$conf_dir/conf.d"

@@ -5,9 +5,9 @@
   apt:
     name:
       - postgresql
-      - postgresql-9.5-postgis-2.2
-      - postgresql-client-9.5
-      - postgresql-contrib-9.5
+      - postgresql-10-postgis-2.4
+      - postgresql-client-10
+      - postgresql-contrib
       - postgresql-server-dev-all
       - python-psycopg2
     state: present
@@ -15,15 +15,35 @@
     cache_valid_time: 43200
 
 - name: Optimize Postgres for DB import
-  template: src=files/conf/pg_write_heavy.conf dest=/etc/postgresql/9.5/main/postgresql.conf
+  lineinfile:
+    dest: /etc/postgresql/10/main/postgresql.conf
+    line: "{{ item }}"
+    state: present
+  with_items:
+    - "work_mem = 32MB"
+    - "shared_buffers = 4GB"
+    - "maintenance_work_mem = 2GB"
+    - "full_page_writes = off"
+    - "autovacuum = off"
+    - "wal_buffers = -1"
   when: packer is defined
 
 - name: Optimize Postgres for reads
-  template: src=files/conf/pg_read_heavy.conf dest=/etc/postgresql/9.5/main/postgresql.conf
+  lineinfile:
+    dest: /etc/postgresql/10/main/postgresql.conf
+    line: "{{ item }}"
+    state: absent
+  with_items:
+    - "work_mem = 32MB"
+    - "shared_buffers = 4GB"
+    - "maintenance_work_mem = 2GB"
+    - "full_page_writes = off"
+    - "autovacuum = off"
+    - "wal_buffers = -1"
   when: not packer
 
 - name: Install postgres_hba configuration file.
-  template: src=files/conf/pg_hba.conf dest=/etc/postgresql/9.5/main/pg_hba.conf
+  template: src=files/conf/pg_hba.conf dest=/etc/postgresql/10/main/pg_hba.conf
   notify: restart postgres
 
 - name: restart postgres
