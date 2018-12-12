@@ -17,12 +17,15 @@ set -x
 # We'll also continue to 'warm' the ONSUD table in the background
 # while the server is under load.
 
-
 # don't run this script if we're building an image
 /usr/local/bin/instance-tags 'Env=packer-ami-build' && exit 0
 
 # ensure the dirver is marked dirty before we start
 rm ~/clean || true
+
+# have a little snooze to ensure the postgres
+# service has started before we try to run pg_dump
+sleep 30
 
 # dump addressbase and residentialaddress tables in parallel
 pg_dump -d polling_stations -t addressbase_address > /dev/null &
