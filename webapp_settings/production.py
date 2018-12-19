@@ -61,6 +61,11 @@ GOOGLE_API_KEY = '{{ google_maps_api_key }}'
 EMAIL_SIGNUP_API_KEY = '{{ vault_email_signup_api_key }}'
 CUSTOM_UA = "DemocracyClub/wheredoivote.co.uk"
 
+# when you change this, remember to turn sync back on
+# in roles/every_election/tasks/main.yml and
+# deploy to a meatier instance than a t3.micro
+# EE_BASE = 'http://localhost:8000/'
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
