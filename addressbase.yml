@@ -51,17 +51,9 @@
     file: state=directory path={{ addressbase_tmp_path }}
 
   - name: Download addressbase from S3
-    command: "aws s3 --region={{ build_region }} sync s3://pollingstations-packer-assets/addressbase/{{ addressbase_folder_name }} {{ addressbase_tmp_path }}"
+    command: "aws s3 --region={{ build_region }} cp s3://pollingstations-packer-assets/addressbase/{{ addressbase_file_name }} {{ addressbase_tmp_path }}/addressbase_cleaned.csv"
 
-  - name: Unzip addressbase
-    shell: "unzip \\*.zip"
-    args:
-      chdir: "{{ addressbase_tmp_path }}"
-
-  - name: Clean addressbase
-    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py clean_addressbase {{ addressbase_tmp_path }}"
-
-  - name: Import cleaned addresses
+  - name: Import addresses
     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_cleaned_addresses {{ addressbase_tmp_path }}"
 
   - name: Delete addressbase tmp files
