@@ -84,14 +84,6 @@
     name: "{{ ee_name }}"
 
 
-- name: Install .s3cfg file
-  template:
-    src: "s3cfg"
-    dest: /root/.s3cfg
-    group: root
-    owner: root
-    mode: 0755
-
 - name: Install EE database restore script
   template:
     src: "load_database_from_s3.sh"
