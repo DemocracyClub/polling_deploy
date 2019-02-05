@@ -29,10 +29,6 @@ RAVEN_CONFIG = {
     'dsn': '{{ vault_sentry_dsn }}',
 }
 
-PROD_APPS = (
-    'raven.contrib.django.raven_compat',
-)
-
 ADMINS = (
     ('DC developers', 'developers@democracyclub.org.uk'),
 )
