@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 set -x
 
 # Get the latest backup file
@@ -17,5 +18,7 @@ DB={{ ee_name }}
 
 echo $FILENAME
 s3cmd get --skip-existing $LATEST_FILE $SRCDIR --region=eu-west-2
-pg_restore --create --clean -j 2 -U $USER  -d $DB  $SRCDIR/$FILENAME
+dropdb -U $USER $DB
+createdb -U $USER $DB
+pg_restore -j 2 -U $USER  -d $DB  $SRCDIR/$FILENAME
 rm $SRCDIR/*
