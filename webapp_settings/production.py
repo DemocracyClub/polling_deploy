@@ -49,10 +49,10 @@ DATABASE_ROUTERS = ['polling_stations.db_routers.LoggerRouter',]
 STATIC_URL = 'https://s3-eu-west-1.amazonaws.com/pollingstations-assets2/{{ image_id.stdout }}/'
 PIPELINE['SASS_BINARY'] = "/var/www/polling_stations/env/bin/sassc"
 
-
-{% if google_maps_api_key %}
-GOOGLE_API_KEY = '{{ google_maps_api_key }}'
-{% endif %}
+GOOGLE_API_KEYS = [
+    '{{ vault_google_maps_api_key1 }}',
+    '{{ vault_google_maps_api_key2 }}',
+]
 
 EMAIL_SIGNUP_API_KEY = '{{ vault_email_signup_api_key }}'
 CUSTOM_UA = "DemocracyClub/wheredoivote.co.uk"
@@ -103,7 +103,7 @@ if SERVER_ENVIRONMENT in ['prod', 'test']:
     DATABASES['logger'] = {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'USER': 'polling_stations',
-        'PASSWORD': '{{ logger_prod_password }}',
+        'PASSWORD': '{{ vault_logger_prod_password }}',
         'HOST': 'logger-prod.c0jvejtwfveq.eu-west-1.rds.amazonaws.com',
         'PORT': '5432',
     }
