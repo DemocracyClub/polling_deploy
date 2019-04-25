@@ -14,8 +14,17 @@
   - name: Import Councils
     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_councils -u {{ alt_boundaries_url }}"
 
+  - name: Create private_data_path
+    file: state=directory path={{ private_data_path }}
+
+  - name: Sync S3 bucket
+    shell: "aws s3 sync s3://pollingstations-data/ {{ private_data_path }}"
+
   - name: Import data
     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import -e '{{ election_regex }}' -r --multiprocessing"
     args:
        executable: /bin/bash
        chdir: "{{ project_root }}"
+
+  - name: Delete private_data_path
+    file: state=absent path={{ private_data_path }}

@@ -1,6 +1,7 @@
 ---
 project_name: polling_stations
 project_root: /var/www/polling_stations
+private_data_path: /tmp/s3mirror
 app_name: polling_stations
 django_media_path: polling_stations
 django_media_root: /var/www/polling_stations-media/media_root
