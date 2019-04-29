@@ -5,7 +5,7 @@
     "regions_to_copy_to": "eu-central-1",
     "branch": "master",
     "app_name": "wdiv",
-    "max_spot_price": "0.3",
+    "max_spot_price": "0.7",
     "ssh_private_key_file": null,
     "election_regex": null
   },
