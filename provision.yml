@@ -37,6 +37,9 @@
   - name: Create apt-daily.timer.d directory
     file: path=/etc/systemd/system/apt-daily.timer.d state=directory
 
+  - name: Remove all partial apt files
+    raw: rm -rf /var/lib/apt/lists/partial/*
+
   - name: Prevent systemd daily update race condition
     template:
       src: "files/systemd/apt-daily.timer.conf"
