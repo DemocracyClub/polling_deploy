@@ -52,6 +52,7 @@ PIPELINE['SASS_BINARY'] = "/var/www/polling_stations/env/bin/sassc"
 GOOGLE_API_KEYS = [
     '{{ vault_google_maps_api_key1 }}',
     '{{ vault_google_maps_api_key2 }}',
+    '{{ vault_google_maps_api_key3 }}',
 ]
 
 EMAIL_SIGNUP_API_KEY = '{{ vault_email_signup_api_key }}'
