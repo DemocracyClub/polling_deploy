@@ -51,8 +51,8 @@ PIPELINE['SASS_BINARY'] = "/var/www/polling_stations/env/bin/sassc"
 
 GOOGLE_API_KEYS = [
     '{{ vault_google_maps_api_key1 }}',
-    '{{ vault_google_maps_api_key2 }}',
-    '{{ vault_google_maps_api_key3 }}',
+    #'{{ vault_google_maps_api_key2 }}',
+    #'{{ vault_google_maps_api_key3 }}',
 ]
 
 EMAIL_SIGNUP_API_KEY = '{{ vault_email_signup_api_key }}'
@@ -63,7 +63,7 @@ CUSTOM_UA = "DemocracyClub/wheredoivote.co.uk"
 # deploy to a meatier instance than a t3.micro
 EE_BASE = 'http://localhost:8000/'
 
-NEXT_CHARISMATIC_ELECTION_DATE = "2019-05-23"
+#NEXT_CHARISMATIC_ELECTION_DATE = "2019-05-23"
 
 CACHES = {
     "default": {
