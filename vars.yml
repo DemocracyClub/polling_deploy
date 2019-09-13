@@ -1,4 +1,5 @@
 ---
+ansible_python_interpreter: /usr/bin/python3
 project_name: polling_stations
 project_root: /var/www/polling_stations
 private_data_path: /tmp/s3mirror
@@ -38,13 +39,19 @@ system_packages:
   - npm
   - opencv-data
   - postfix
+  - python-pip
   - python3-dev
   - python3-pip
-  - python3-virtualenv
   - redis-server
   - unzip
 
-python_packages:
+# Install s3 with pip as a python 2 dependency because we hit this bug:
+# https://github.com/s3tools/s3cmd/issues/930
+# and we want to authenticate using iam role instead of key
+python2_packages:
+  - s3cmd
+
+python3_packages:
   - awscli
   - ec2_tag_conditional
   - virtualenv

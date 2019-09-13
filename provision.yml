@@ -5,11 +5,6 @@
   gather_facts: false
 
   pre_tasks:
-    - name: Install python for Ansible
-      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal aptitude)
-      register: output
-      changed_when: 'output.stdout != ""'
-
     - name: Stop auto update
       raw: systemctl disable apt-daily.timer
 
@@ -89,10 +84,10 @@
       global: true
       state: latest
 
-  - name: Install required Python packages.
+  - name: Install required Python 3 packages.
     pip:
-      name: "{{ python_packages }}"
-      executable: /usr/bin/pip3
+      name: "{{ python3_packages }}"
+      executable: pip3
 
   - name: Change permissions.
     shell: chown -R {{ project_name }}:{{ project_name }} {{ project_root }}

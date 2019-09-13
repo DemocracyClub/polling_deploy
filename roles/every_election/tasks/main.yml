@@ -5,26 +5,23 @@
 - name: gather facts
   setup:
 
-- name: Install dependencies
+- name: Install required system packages.
   become: true
   become_user: root
   apt:
-    name:
-      - build-essential
-      - python3-dev
-      - python-virtualenv
-      - python-pip
+    name: "{{ system_packages }}"
     state: present
-    update-cache: yes
-    cache_valid_time: 43200
+    update_cache: yes
 
-# Install s3 with pip as a python 2 dependency because
-# apt installs it with python 3 and we hit this bug:
-# https://github.com/s3tools/s3cmd/issues/930
-# because we want to authenticate using iam role instead of key
-- name: Install s3cmd
+- name: Install required Python 2 packages.
   pip:
-    name: s3cmd
+    name: "{{ python2_packages }}"
+    executable: pip2
+
+- name: Install required Python 3 packages.
+  pip:
+    name: "{{ python3_packages }}"
+    executable: pip3
 
 - name: Create the project directory.
   file:

@@ -9,7 +9,7 @@
       - postgresql-client-10
       - postgresql-contrib
       - postgresql-server-dev-all
-      - python-psycopg2
+      - python3-psycopg2
     state: present
     update-cache: yes
     cache_valid_time: 43200
