@@ -21,7 +21,7 @@
   - name: Schedule Initialize DB task
     cron:
       name: "Initialize DB"
-      job: "/usr/local/bin/output-on-error ~/init_db.sh"
+      job: "output-on-error ~/init_db.sh"
       user: "{{ project_name }}"
       special_time: reboot
     become_user: "{{ project_name }}"

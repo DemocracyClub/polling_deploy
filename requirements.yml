@@ -1,7 +1,7 @@
 ---
 
 - src: https://github.com/DemocracyClub/ansible-role-commonscripts
-  version: 1.0.0
+  version: 2.1.1
   name: dc_commonscripts
 
 - src: https://github.com/DemocracyClub/ansible-role-papertrail
