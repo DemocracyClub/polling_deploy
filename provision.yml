@@ -10,6 +10,12 @@
       register: output
       changed_when: 'output.stdout != ""'
 
+    - name: Stop auto update
+      raw: systemctl disable apt-daily.timer
+
+    - name: Remove all partial apt files
+      raw: rm -rf /var/lib/apt/lists/partial/*
+
     # turn gather_facts back on
     # so that ansible_env is defined
     - name: gather facts
@@ -37,13 +43,13 @@
   - name: Create apt-daily.timer.d directory
     file: path=/etc/systemd/system/apt-daily.timer.d state=directory
 
-  - name: Remove all partial apt files
-    raw: rm -rf /var/lib/apt/lists/partial/*
-
-  - name: Prevent systemd daily update race condition
+  - name: Install apt-daily timer config file
     template:
       src: "files/systemd/apt-daily.timer.conf"
       dest: "/etc/systemd/system/apt-daily.timer.d/apt-daily.timer.conf"
+
+  - name: Start auto update again
+    raw: systemctl start apt-daily.timer
 
   - name: Update all packages
     apt: upgrade=safe
