@@ -16,7 +16,7 @@
     region: "{{ lookup('env', 'AWS_REGION') or 'eu-west-1' }}"
     regions:
       eu-west-1:
-        ami_id: ami-010da3c3764f7c036
+        ami_id: ami-025e739f8641f29e5
         # The default VPC
         vpc_id: vpc-e2c30986
       # eu-central-1:
@@ -26,7 +26,7 @@
     ami_id: "{{ regions[region].ami_id }}"
     elb_ssl_arn: "arn:aws:acm:eu-west-1:225244788755:certificate/f550f331-59f8-4318-a91d-2384d0b6c23f"
 
-    lc_num: 208
+    lc_num: 209
     old_lc_num: "{{ lc_num - 1 }}"
     aws_env: "{{ lookup('env', 'ENVIRONMENT') or 'test' }}"
 
@@ -145,7 +145,7 @@
         name: "pollingstations_{{ aws_env }}-{{ lc_num }}"
         assign_public_ip: yes
         image_id: "{{ ami_id }}"
-        instance_type: t3.small
+        instance_type: t3.medium
         instance_profile_name: "arn:aws:iam::225244788755:instance-profile/packer-ami-builder"
         security_groups: ["{{ sg_instance.group_id }}"]
         user_data: "{{lookup('template', 'userdata.yml') }}"
