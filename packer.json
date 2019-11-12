@@ -54,7 +54,7 @@
       "ami_name": "addressbase {{isotime |clean_ami_name }}",
       "associate_public_ip_address": true,
       "iam_instance_profile": "packer-ami-builder",
-      "instance_type":"m4.10xlarge",
+      "instance_type":"m5.8xlarge",
       "spot_price": "{{ user `max_spot_price`}}",
       "launch_block_device_mappings": [
           {
@@ -98,7 +98,7 @@
       "ami_description": "AMI with Addressbase and Council data pre-imported",
       "associate_public_ip_address": true,
       "iam_instance_profile": "packer-ami-builder",
-      "instance_type":"m4.10xlarge",
+      "instance_type":"m5.8xlarge",
       "region": "eu-west-1",
       "region":"{{user `build_region` }}",
       "source_ami": "{{user `addressbase_ami_id`}}",
