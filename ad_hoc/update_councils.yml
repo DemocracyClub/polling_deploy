@@ -19,7 +19,7 @@
       - restart web frontend
 
   - name: Import Councils
-    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_councils --contact-type councils -u {{ alt_boundaries_url }}"
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_councils -u {{ alt_boundaries_url }}"
     args:
       chdir: "{{ project_root }}/code/"
 
