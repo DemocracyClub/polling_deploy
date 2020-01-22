@@ -117,6 +117,8 @@ if SERVER_ENVIRONMENT in ['prod', 'test']:
     if SERVER_ENVIRONMENT == 'test':
         DATABASES['logger']['NAME'] = 'logger_staging'
 
+if SERVER_ENVIRONMENT == 'prod':
+    S3_UPLOADS_BUCKET = "pollingstations-uploads"
 
 if SERVER_ENVIRONMENT == 'test':
     BASICAUTH_DISABLE = False
