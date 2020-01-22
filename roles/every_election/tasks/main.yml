@@ -117,12 +117,12 @@
     value: "{{ cron_email }}"
     user: "{{ ee_name }}"
 
-- name: Schedule sync local EE data from source
-  cron:
-    name: "Sync local EE data from source"
-    minute: 0
-    hour: 4
-    job: "output-on-error /var/www/{{ ee_name }}/env/bin/python /var/www/{{ ee_name }}/code/manage.py sync_elections"
-    user: "{{ ee_name }}"
-  become_user: root
-  become: true
+#- name: Schedule sync local EE data from source
+#  cron:
+#    name: "Sync local EE data from source"
+#    minute: 0
+#    hour: 4
+#    job: "output-on-error /var/www/{{ ee_name }}/env/bin/python /var/www/{{ ee_name }}/code/manage.py sync_elections"
+#    user: "{{ ee_name }}"
+#  become_user: root
+#  become: true
