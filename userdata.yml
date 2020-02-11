@@ -15,3 +15,9 @@ users:
     shell: /bin/bash
     ssh-authorized-keys:
       - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDP700VjbnTIwRnOemtcJJGPr0Pgq8gOwhR4SVBR/50RVGddX7Jw9XqW8wMNmI93xZPV5YR5JfMlnvaMfAgHD1zdSBPs1lbx8MZahbVgBQTirLaHorjglzUXTBzLnnopC8DVt4IwFuh3vR71+rVn3vum8/fJAI7ISdBdkcDxHkv4zIa3I+sQ22YmflnzpJA/l1A7WJYTQUjLiDElijWHHwMQv86SBpxsHN3u3nEyaylrINDI3L4FTTnBWX+fF/Hxaobn98xiCas8Ho8Ecmvy/ZbP+GS7fJeKZmQCm0ROSCJ1LdAAydprAfYwMG8vPnut3fO7/8MxyT0PbYiiG4I9z7P chris@leonard"
+
+  - name: will
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh-authorized-keys:
+      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqmadSaC7V0X0iIJMC/VvsfqkF7wHDeWKRVhOYkKcUCQfPD86GrJ5s/cywe2hRMyAhG6wQIybwQ2GAJJN/X3CMBqSTg9e+9QuFG5/pf2OOaAgCXkj9oAWMX0n71cFt9GxOKgykkO+2iYzbUO5STEcwApZEbmAYhVUKMltoNC+iB14+BBTnAdqHTMmIr5J8FnKyfhlall1CA5PgWDI0XDfpcrtL5NTVy1Kb3AJiu67agwOxZ3wLF9GH4g8GXvj2isitSnu2d7v50LxAIu8QdrsgAOFqzwhGkoGD4+Gn6TeosFZlMmEwe/1G6WZ687i271pyvQtINFjNI7kr3bT8JXeb will@will-XPS-15-9560"
