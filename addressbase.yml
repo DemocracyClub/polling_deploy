@@ -45,10 +45,6 @@
     set_fact:
       addressbase_tmp_path: '/tmp/addressbase'
 
-  - name: Set ONSUD tmp path
-    set_fact:
-      onsud_tmp_path: '/tmp/onsud'
-
   - name: Create the addressbase tmp dir
     file: state=directory path={{ addressbase_tmp_path }}
 
@@ -63,26 +59,20 @@
       state: absent
       path: "{{ addressbase_tmp_path }}"
 
-  - name: Create the ONSUD tmp dir
-    file: state=directory path={{ onsud_tmp_path }}
-
-  - name: Download ONSUD
-    get_url:
-      url: "{{ onsud_url }}"
-      dest: "{{ onsud_tmp_path }}"
-
-  - name: Unzip ONSUD
-    shell: "unzip \\*.zip"
-    args:
-      chdir: "{{ onsud_tmp_path }}"
-
-  - name: Import ONSUD
-    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_onsud {{ onsud_tmp_path }}/Data"
-
   - name: Create postcode blacklist
     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py create_blacklist"
 
-  - name: Delete ONSUD tmp files
+  - name: Set UPRN to Council lookup path
+    set_fact:
+      uprn_to_council_path: '/tmp/uprn_to_councils.csv'
+
+  - name: Create UPRN to Council lookup
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py create_uprn_council_lookup -d {{ uprn_to_council_path }}"
+
+  - name: Import UPRN to Council lookup
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_uprn_council_lookup {{ uprn_to_council_path }}"
+
+  - name: Delete UPRN to Council lookup
     file:
       state: absent
-      path: "{{ onsud_tmp_path }}"
+      path: "{{ uprn_to_council_path }}"

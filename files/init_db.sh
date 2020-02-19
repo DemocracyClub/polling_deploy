@@ -14,8 +14,8 @@ set -x
 # have been touched at least once before we mark the server 'healthy'
 # and allow the ELB to start forwarding traffic to it.
 # Doing this gets us to an acceptable level of performance.
-# We'll also continue to 'warm' the ONSUD table in the background
-# while the server is under load.
+# We'll also continue to 'warm' the gss to council lookup table in the
+# background while the server is under load.
 
 # don't run this script if we're building an image
 /usr/local/bin/instance-tags 'Env=packer-ami-build' && exit 0
@@ -39,5 +39,5 @@ wait
 # we can swap it in now
 touch ~/clean
 
-# continue dumping the ONSUD table in the background
-pg_dump -d polling_stations -t addressbase_onsud > /dev/null
+# continue dumping the gss to council lookup table in the background
+pg_dump -d polling_stations -t addressbase_uprntocouncil > /dev/null
