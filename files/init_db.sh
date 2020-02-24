@@ -33,6 +33,7 @@ pg_dump -d polling_stations -t pollingstations_residentialaddress > /dev/null &
 pg_dump -d every_election -t uk_geo_utils_onspd > /dev/null &
 pg_dump -d every_election -t organisations_divisiongeography > /dev/null &
 pg_dump -d every_election -t organisations_organisationgeography > /dev/null &
+pg_dump -d polling_stations -t addressbase_uprntocouncil > /dev/null &
 
 wait
 # once both of those are done, make the server clean
@@ -40,4 +41,3 @@ wait
 touch ~/clean
 
 # continue dumping the gss to council lookup table in the background
-pg_dump -d polling_stations -t addressbase_uprntocouncil > /dev/null
