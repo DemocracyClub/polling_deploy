@@ -59,9 +59,6 @@
       state: absent
       path: "{{ addressbase_tmp_path }}"
 
-  - name: Create postcode blacklist
-    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py create_blacklist"
-
   - name: Set UPRN to Council lookup path
     set_fact:
       uprn_to_council_path: '/tmp/uprn_to_councils.csv'
@@ -76,3 +73,6 @@
     file:
       state: absent
       path: "{{ uprn_to_council_path }}"
+
+  - name: Create postcode blacklist
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py create_blacklist"
