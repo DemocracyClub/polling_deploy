@@ -123,30 +123,4 @@ Packer will generate a per-build SSH private key which you will have to use:
 
 ## Ad-hoc tasks
 
-Sometimes you need to fix something urgently and you don't want to wait for an
-AMI rebuild. In which case you can use the ansible dynamic inventory:
-
-    ANSIBLE_HOST_KEY_CHECKING=False AWS_PROFILE=democlub \
-    ansible -i dynamic-inventory/ \
-      -b --become-user polling_stations \
-      tag_Env_prod \
-      -a id
-
-The above command will run `id` as the polling_stations user. This invokes the
-[command module][ansible_command_module] - you might want to add `-a shell` if
-your command is more complex.
-
-What ever change you make don't forget to roll it back into the AMI, create a
-new launch config and update the ASG config (even if you don't replace the
-existing instances) otherwise a scaling event or failed host will "revert"
-your changes.
-
-[ansible_command_module]: http://docs.ansible.com/ansible/command_module.html
-
-### Ad-hoc deploy
-
-`ansible-playbook -u myusername -i dynamic-inventory/ -l tag_Env_prod deploy.yml --extra-vars @vault.yml`
-
-### Take down data
-
-`ansible -u myusername -i dynamic-inventory/ -b --become-user polling_stations tag_Env_prod -m shell -a  "cd /var/www/polling_stations/code/ && ../env/bin/python manage.py teardown -c X01000001"`
+See https://github.com/DemocracyClub/polling_deploy/wiki/Ad-Hoc-Tasks
