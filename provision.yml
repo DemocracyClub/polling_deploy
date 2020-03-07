@@ -140,16 +140,8 @@
       dest: "{{ project_root }}/home/.bashrc"
       line: 'cd && cd ../code && source ../env/bin/activate'
 
-  - name: Check if Libdrafter installed
-    command: test -e /usr/lib/libdrafter.so
-    register: libdrafter_installed
-    ignore_errors: True
-
   handlers:
     - import_tasks: handlers.yml
-
-- import_playbook: drafter.yml
-  when: libdrafter_installed is failed
 
 - import_playbook: deploy.yml
   tags: [deploy]
