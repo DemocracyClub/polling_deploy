@@ -34,12 +34,10 @@ or if you haven't built it yet then:
 
 #### 1. Fetch latest AddressBase
 
-- Order a new copy from the OS website and download it from their FTP
-- The files will be in a directory named something like DCS0000000000
-- Upload the files to
-  s3://pollingstations-packer-assets/addressbase/DCS0000000000
-- Replace `addressbase_folder_name` in `vars.yml` with the directory name
-  (e.g: DCS0000000000)
+- Addressbase [release cycle](https://ordnancesurvey.co.uk/buiness-government/tools-support/addressbase-epoch-dates) is ~6 weeks.
+- Download a copy from the OS website and create a cleaned version as documented in the [UK-Polling-Stations wiki](https://github.com/DemocracyClub/UK-Polling-Stations/wiki/).
+- Upload the cleaned csv to s3://pollingstations-packer-assets/addressbase. Include the date in the name.
+- Replace `addressbase_file_name` in [`vars.yml`](https://github.com/DemocracyClub/polling_deploy/blob/6fab00116a27bac191aaa0ac39eed0daa697738f/vars.yml#L10) 
 
 #### 2. Make the image
 
