@@ -16,11 +16,11 @@
     region: "{{ lookup('env', 'AWS_REGION') or 'eu-west-1' }}"
     regions:
       eu-west-1:
-        ami_id: ami-065186dc7071fe455
+        ami_id: ami-0c9ef3754f2851a62
         # The default VPC
         vpc_id: vpc-e2c30986
       # eu-central-1:
-      #   ami_id: ami-2bbe8e4d
+      #   ami_id: ami-05b8f01fcdd54d587
       #   vpc_id: vpc-1e467077
     vpc_id: "{{ regions[region].vpc_id }}"
     ami_id: "{{ regions[region].ami_id }}"

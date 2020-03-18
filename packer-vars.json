@@ -1,6 +1,6 @@
 {
   "ubuntu_ami_id": "ami-048fb593e4cbe3870",
-  "addressbase_ami_id": "ami-00aa8fb64b5e1b890",
-  "imported-db_ami_id": "ami-00434b3e417ecc125",
+  "addressbase_ami_id": "ami-06dd76ff68dc41cdb",
+  "imported-db_ami_id": "ami-0a52374f75e171722",
   "election_regex": ".*2020-05-07"
 }
