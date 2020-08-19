@@ -14,7 +14,7 @@ ExecStop=/bin/kill -s TERM $MAINPID
 PrivateTmp=true
 
 ExecStart={{ee_project_root}}/env/bin/gunicorn \
-  --workers={{ ansible_processor_cores*2+1 }} \
+  --workers={{ gunicord_workers }} \
    {{ ee_name }}.wsgi
 
 [Install]

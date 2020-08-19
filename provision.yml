@@ -16,6 +16,16 @@
     - name: gather facts
       setup: filter=ansible_*
 
+    - name: Set rest_mode vars
+      set_fact:
+        gunicord_workers: 1
+      when: rest_mode|bool
+
+    - name: Set non-rest_mode vars
+      set_fact:
+        gunicord_workers: "{{ ansible_facts['processor_cores']*2+1 }}"
+      when: not rest_mode|bool
+
   vars_files:
     - vars.yml
 

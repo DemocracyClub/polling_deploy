@@ -17,7 +17,7 @@ PrivateTmp=true
 
 ExecStart={{project_root}}/env/bin/gunicorn {{ app_name }}.wsgi \
     --pid /run/{{ project_name }}_gunicorn/pid \
-    --workers {{ ansible_processor_cores*2+1 }} \
+    --workers {{ gunicord_workers }} \
     --log-file=/tmp/{{app_name}}.log \
     --log-level=debug \
     --env=GEM_HOME="{{ project_root }}/gems" \
