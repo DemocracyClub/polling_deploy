@@ -11,6 +11,42 @@
   },
   "builders": [
     {
+      "name": "rest_mode_server",
+      "type": "amazon-ebs",
+      "ssh_keypair_name": "dc_admins",
+      "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
+      "ami_name": "ukpollingstations-rest-mode {{isotime |clean_ami_name }}",
+      "ami_regions":"{{user `regions_to_copy_to` }}",
+      "associate_public_ip_address": true,
+      "iam_instance_profile": "packer-ami-builder",
+      "instance_type":"m4.large",
+      "region": "eu-west-1",
+      "region":"{{user `build_region` }}",
+      "source_ami": "{{user `imported-db_ami_id`}}",
+      "spot_price": "{{ user `max_spot_price`}}",
+      "ssh_username": "ubuntu",
+      "tags": {
+        "application": "{{user `app_name` }}",
+        "build_step": "server",
+        "build_date":"{{isotime}}"
+      },
+      "run_tags": {
+        "application": "{{user `app_name` }}",
+        "Name": "packer-ami-build",
+        "Env": "packer-ami-build"
+      },
+      "run_volume_tags": {
+        "application": "{{user `app_name` }}",
+        "build_step": "server",
+        "build_date":"{{isotime}}"
+      },
+      "snapshot_tags": {
+        "application": "{{user `app_name` }}",
+        "build_step": "server",
+        "build_date":"{{isotime}}"
+      }
+    },
+    {
       "name": "server",
       "type": "amazon-ebs",
       "ssh_keypair_name": "dc_admins",
@@ -134,7 +170,8 @@
       "groups":["production", "servers", "remote"],
       "extra_arguments": [
         "--extra-vars", "nickname=production packer=1 build_region={{ user `build_region` }} packer_addressbase=1 branch={{user `branch`}}",
-        "--extra-vars", "@vault.yml"
+        "--extra-vars", "@vault.yml",
+        "--extra-vars", "rest_mode=false"
       ]
     },
 
@@ -144,7 +181,8 @@
       "groups":["production", "servers", "remote"],
       "extra_arguments": [
         "--extra-vars", "nickname=production packer=1 branch={{user `branch`}} vault_logger_prod_password=dummy",
-        "--extra-vars", "@vault.yml"
+        "--extra-vars", "@vault.yml",
+        "--extra-vars", "rest_mode=false"
       ]
     },
     {
@@ -156,7 +194,8 @@
         "-vv",
         "--extra-vars", "nickname=production packer=1 packer_import_data=1",
         "--extra-vars", "election_regex={{ user `election_regex` }} branch={{user `branch`}}",
-        "--extra-vars", "@vault.yml"
+        "--extra-vars", "@vault.yml",
+        "--extra-vars", "rest_mode=false"
       ]
     },
     {
@@ -168,10 +207,24 @@
         "-vv",
         "--extra-vars", "nickname=production",
         "--extra-vars", "branch={{user `branch`}}",
-        "--extra-vars", "@vault.yml"
+        "--extra-vars", "@vault.yml",
+        "--extra-vars", "rest_mode=false"
       ]
     },
 
+    {
+      "type": "ansible",
+      "only": ["rest_mode_server"],
+      "playbook_file": "./provision.yml",
+      "groups":["production", "servers", "remote"],
+      "extra_arguments": [
+        "-vv",
+        "--extra-vars", "nickname=production",
+        "--extra-vars", "branch={{user `branch`}}",
+        "--extra-vars", "@vault.yml",
+        "--extra-vars", "rest_mode=true"
+      ]
+    },
     {
       "type": "shell",
       "inline": [

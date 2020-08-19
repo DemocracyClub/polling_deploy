@@ -73,6 +73,12 @@ or if you haven't built it yet then:
 
         AWS_PROFILE=democlub ./packer server
 
+- When not in an election cycle, you can build a "rest mode" server image
+  that will run better on a micro instance:
+
+        AWS_PROFILE=democlub ./packer rest_mode_server
+
+
   **NOTE**: To run this you will need the Ansible Vault password. Place it in
   a `.vault_pass.txt` file in the same directory as this file. To view the
   vault variables run `ansible-vault view vault.yml`.
