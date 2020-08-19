@@ -2,7 +2,6 @@
   "description": "Builds UK Polling Station golden image",
   "variables": {
     "build_region": "eu-west-1",
-    "regions_to_copy_to": "eu-central-1",
     "branch": "master",
     "app_name": "wdiv",
     "max_spot_price": "0.8",
