@@ -153,8 +153,9 @@
   - name: Run import councils from EC hourly
     cron:
       name: "Import councils from EC hourly"
-      job: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_councils --only-contact-details"
+      job: "/usr/bin/manage-py-command import_councils --only-contact-details"
       minute: "1"
+      user: "{{ project_name }}"
 
   handlers:
     - import_tasks: handlers.yml
