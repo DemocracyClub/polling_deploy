@@ -74,5 +74,3 @@
       state: absent
       path: "{{ uprn_to_council_path }}"
 
-  - name: Create postcode blacklist
-    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py create_blacklist"
