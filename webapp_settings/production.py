@@ -119,6 +119,9 @@ if SERVER_ENVIRONMENT in ['prod', 'test']:
 
 if SERVER_ENVIRONMENT == 'prod':
     S3_UPLOADS_BUCKET = "pollingstations-uploads"
+if SERVER_ENVIRONMENT == 'test':
+    S3_UPLOADS_BUCKET = "pollingstations-uploads-dev"
+
 
 if SERVER_ENVIRONMENT == 'test':
     BASICAUTH_DISABLE = False
