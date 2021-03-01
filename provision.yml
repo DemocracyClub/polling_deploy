@@ -92,6 +92,7 @@
     npm:
       name: npm
       global: true
+      version: "6.14.11"
       state: latest
 
   - name: Install required Python 3 packages.
