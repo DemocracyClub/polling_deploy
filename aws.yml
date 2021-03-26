@@ -127,7 +127,7 @@
         tags:
           - Env: "{{ aws_env }}"
             Name: pollingstations-spot-asg
-        desired_capacity: 1
+        desired_capacity: 5
         launch_config_name: "{{launchconfig.name}}"
         load_balancers: [ "{{ elb_result.elb.name }}" ]
         max_size: 10
