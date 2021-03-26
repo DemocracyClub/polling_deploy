@@ -145,7 +145,7 @@
         name: "pollingstations_{{ aws_env }}-{{ lc_num }}"
         assign_public_ip: yes
         image_id: "{{ ami_id }}"
-        instance_type: t3.medium
+        instance_type: m5d.large
         instance_profile_name: "arn:aws:iam::225244788755:instance-profile/packer-ami-builder"
         security_groups: ["{{ sg_instance.group_id }}"]
         user_data: "{{lookup('template', 'userdata.yml') }}"
