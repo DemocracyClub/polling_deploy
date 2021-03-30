@@ -41,6 +41,7 @@ DATABASES = {
         'PASSWORD': '',
         'HOST': '',
         'PORT': '',
+        'CONN_MAX_AGE': 60,
     },
 }
 DATABASE_ROUTERS = ['polling_stations.db_routers.LoggerRouter',]
