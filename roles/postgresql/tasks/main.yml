@@ -28,7 +28,7 @@
     - "wal_buffers = -1"
   when: packer is defined
 
-- name: Optimize Postgres for reads
+- name: Remove write heavy Postgres config
   lineinfile:
     dest: /etc/postgresql/10/main/postgresql.conf
     line: "{{ item }}"
@@ -41,6 +41,22 @@
     - "autovacuum = off"
     - "wal_buffers = -1"
   when: not packer
+
+- name: Add read heavy Postgres config
+  lineinfile:
+    dest: /etc/postgresql/10/main/postgresql.conf
+    line: "{{ item }}"
+    state: present
+  with_items:
+    - "work_mem = 100MB"
+    - "shared_buffers = 512MB"
+    - "effective_cache_size = 1024MB"
+    - "checkpoint_segment = 32"
+    - "checkpoint_completion_target = 0.9"
+    - "default_statistics_target = 1000"
+    - "maintenance_work_mem = 1GB"
+  when: not packer
+
 
 - name: Install postgres_hba configuration file.
   template: src=files/conf/pg_hba.conf dest=/etc/postgresql/10/main/pg_hba.conf
