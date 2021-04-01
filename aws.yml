@@ -162,9 +162,9 @@
         health_check_type: ELB
         launch_config_name: "{{launchconfig.name}}"
         load_balancers: ["{{ elb_result.elb.name }}"]
-        max_size: 10
-        min_size: 1
-        desired_capacity: 1
+        max_size: 15
+        min_size: 5
+        desired_capacity: 10
         replace_batch_size: 1
         replace_all_instances: "{{ replace_all|default(False) }}"
         termination_policies: [ OldestLaunchConfiguration, ClosestToNextInstanceHour ]
