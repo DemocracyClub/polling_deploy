@@ -51,7 +51,6 @@
     - "work_mem = 100MB"
     - "shared_buffers = 512MB"
     - "effective_cache_size = 1024MB"
-    - "checkpoint_segment = 32"
     - "checkpoint_completion_target = 0.9"
     - "default_statistics_target = 1000"
     - "maintenance_work_mem = 1GB"
