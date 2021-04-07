@@ -18,6 +18,9 @@
     notify:
       - restart web frontend
 
+  - name: Flush handlers
+    meta: flush_handlers
+
   - name: Apply Misc Fixes
     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py misc_fixes"
     args:
