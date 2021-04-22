@@ -95,8 +95,9 @@
           {
               "device_name": "/dev/sda1",
               "delete_on_termination": true,
-              "volume_size": "80",
-              "volume_type": "gp2"
+              "volume_size": "100",
+              "volume_type": "gp3",
+              "iops": "6000"
           }
       ],
       "region": "eu-west-1",
