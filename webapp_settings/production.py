@@ -56,6 +56,8 @@ GOOGLE_API_KEYS = [
     #'{{ vault_google_maps_api_key3 }}',
 ]
 
+MAPBOX_API_KEY = '{{ vault_mapbox_api_key }}'
+
 EMAIL_SIGNUP_API_KEY = '{{ vault_email_signup_api_key }}'
 CUSTOM_UA = "DemocracyClub/wheredoivote.co.uk"
 
