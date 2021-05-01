@@ -1,5 +1,5 @@
 {
-  "ubuntu_ami_id": "ami-0d40053470cce7b92",
+  "ubuntu_ami_id": "ami-0794bfa4791737d52",
   "addressbase_ami_id": "ami-094259bb0aa492391",
   "imported-db_ami_id": "ami-0208f1a8edb3dca72",
   "election_regex": ".*2021-05-06"
