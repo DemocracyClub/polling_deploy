@@ -66,7 +66,7 @@ CUSTOM_UA = "DemocracyClub/wheredoivote.co.uk"
 # deploy to a meatier instance than a t3.micro
 EE_BASE = 'http://localhost:8000/'
 
-NEXT_CHARISMATIC_ELECTION_DATE = "2021-05-06"
+NEXT_CHARISMATIC_ELECTION_DATE = None
 
 CACHES = {
     "default": {
