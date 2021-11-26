@@ -7,9 +7,9 @@ app_name: polling_stations
 django_media_path: polling_stations
 django_media_root: /var/www/polling_stations-media/media_root
 project_repo: https://github.com/DemocracyClub/UK-Polling-Stations.git
-addressbase_file_name: ABFLGB_CSV_2021-02-28_cleaned.csv
-onspd_url: https://ons-cache.s3.amazonaws.com/onspd/ONSPD_FEB_2021_UK.zip
-alt_boundaries_url: https://ons-cache.s3.amazonaws.com/Local_Authority_Districts_April_2019_Boundaries_UK_BFE.geojson
+addressbase_file_name: addressbase-plus-2021-11-01_cleaned.csv
+onspd_url: https://ons-cache.s3.amazonaws.com/onspd/ONSPD_NOV_2021_UK.zip
+alt_boundaries_url: https://ons-cache.s3.amazonaws.com/Local_Authority_Districts_December_2020_UK_BFE.geojson
 packer: 0
 branch: master
 nickname: production
