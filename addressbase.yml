@@ -21,6 +21,12 @@
     args:
       chdir: "{{ project_root }}/code/"
 
+  - name: Import Councils on logger database
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_councils -u {{ alt_boundaries_url }} --database logger"
+    args:
+      chdir: "{{ project_root }}/code/"
+
+
   - name: Set ONSPD tmp path
     set_fact:
       onspd_tmp_path: '/tmp/onspd'
