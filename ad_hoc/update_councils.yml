@@ -18,10 +18,17 @@
     notify:
       - restart web frontend
 
-  - name: Import Councils
+  - name: Import Councils on instances
     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_councils -u {{ alt_boundaries_url }}"
     args:
       chdir: "{{ project_root }}/code/"
+
+  - name: Import Councils on logger database
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_councils -u {{ alt_boundaries_url }} --database logger"
+    args:
+      chdir: "{{ project_root }}/code/"
+    run_once: True
+
 
   handlers:
     - import_tasks: "../handlers.yml"
