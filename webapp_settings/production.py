@@ -44,7 +44,12 @@ DATABASES = {
         'CONN_MAX_AGE': 60,
     },
 }
-DATABASE_ROUTERS = ['polling_stations.db_routers.LoggerRouter',]
+
+# infer environment from the EC2 tags
+SERVER_ENVIRONMENT = get_env()
+
+if SERVER_ENVIRONMENT != 'packer-ami-build':
+    DATABASE_ROUTERS = ['polling_stations.db_routers.LoggerRouter',]
 
 
 STATIC_URL = 'https://s3-eu-west-1.amazonaws.com/pollingstations-assets2/{{ image_id.stdout }}/'
@@ -79,8 +84,6 @@ CACHES = {
 }
 
 
-# infer environment from the EC2 tags
-SERVER_ENVIRONMENT = get_env()
 
 
 # settings that are conditional on env

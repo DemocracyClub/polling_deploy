@@ -3,4 +3,5 @@
   "addressbase_ami_id": "ami-0d40b3017196d0aa6",
   "imported-db_ami_id": "ami-0ab97bc97d07cd032",
   "election_regex": ".*2022-02-03"
+
 }
