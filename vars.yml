@@ -57,3 +57,7 @@ python3_packages:
 
 initfiles:
   - gunicorn
+
+s3_years:
+  - 2022
+  - 2023
