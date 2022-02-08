@@ -68,7 +68,7 @@ or if you haven't built it yet then:
   This will build on the addressbase AMI and include in it the councils and
   polling stations data.
   - Which councils are imported is determined by the `election_regex` key in `./packer-vars.json`.
-  - What council data is synced from s3 is controlled by the value in `s3_include` key in `./packer-vars.json`.
+  - What council data is synced from s3 is controlled by the value in `s3_years` key in `./vars.yml`.
 
 - To make just a code change, build the `server` AMI. This is built on the
   `imported-db` AMI and just adds the code changes.
