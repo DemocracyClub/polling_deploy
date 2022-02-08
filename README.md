@@ -55,9 +55,9 @@ or if you haven't built it yet then:
   stage)
 
   The AMI id (`ami-7c8f160f` in this case) needs to go into
-  `./packer-vars.json` in the `database_ami_id` key.
+  `./packer-vars.json` in the `addressbase_ami_id` key.
 
-- If the pollingstations/council dump has changed then similary to
+- If the pollingstations/council dump has changed then similarly to
   `addressbase` above run
 
         AWS_PROFILE=democlub ./packer imported-db
@@ -65,8 +65,10 @@ or if you haven't built it yet then:
   and store the resulting AMI id in the `imported-db_ami_id` key in
   `./packer-vars.json`.
 
-  This will build one the addressbase AMI and include in the councils and
+  This will build on the addressbase AMI and include in it the councils and
   polling stations data.
+  - Which councils are imported is determined by the `election_regex` key in `./packer-vars.json`.
+  - What council data is synced from s3 is controlled by the value in `s3_include` key in `./packer-vars.json`.
 
 - To make just a code change, build the `server` AMI. This is built on the
   `imported-db` AMI and just adds the code changes.

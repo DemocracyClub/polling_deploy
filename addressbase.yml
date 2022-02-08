@@ -14,7 +14,7 @@
   # This isn't used as part of this play, but by baking it in at this stage, we don't have to
   # download as much in the imported-db stage.
   - name: Sync S3 bucket
-    shell: "aws s3 sync s3://pollingstations-data/ {{ private_data_path }}"
+    shell: "aws s3 sync s3://pollingstations-data/ {{ private_data_path }} --exclude '*' --include '*{{ s3_include }}*'"
 
   - name: Import Councils
     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py import_councils -u {{ alt_boundaries_url }}"

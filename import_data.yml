@@ -20,7 +20,7 @@
     file: state=directory path={{ private_data_path }}
 
   - name: Sync S3 bucket
-    shell: "aws s3 sync s3://pollingstations-data/ {{ private_data_path }}"
+    shell: "aws s3 sync s3://pollingstations-data/ {{ private_data_path }} --exclude '*' --include '*{{ s3_include }}*'"
 
   - name: Apply Misc Fixes
     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py misc_fixes"
