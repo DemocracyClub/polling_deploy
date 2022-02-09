@@ -158,6 +158,14 @@
       minute: "1"
       user: "{{ project_name }}"
 
+  - name: Run import councils on the logger DB hourly
+    cron:
+      name: "Run import councils on the logger DB hourly"
+      job: "/usr/bin/manage-py-command import_councils --only-contact-details --database logger"
+      minute: "1"
+      user: "{{ project_name }}"
+
+
   handlers:
     - import_tasks: handlers.yml
 

@@ -44,7 +44,12 @@ DATABASES = {
         'CONN_MAX_AGE': 60,
     },
 }
-DATABASE_ROUTERS = ['polling_stations.db_routers.LoggerRouter',]
+
+# infer environment from the EC2 tags
+SERVER_ENVIRONMENT = get_env()
+
+if SERVER_ENVIRONMENT != 'packer-ami-build':
+    DATABASE_ROUTERS = ['polling_stations.db_routers.LoggerRouter',]
 
 
 STATIC_URL = 'https://s3-eu-west-1.amazonaws.com/pollingstations-assets2/{{ image_id.stdout }}/'
@@ -79,8 +84,6 @@ CACHES = {
 }
 
 
-# infer environment from the EC2 tags
-SERVER_ENVIRONMENT = get_env()
 
 
 # settings that are conditional on env
@@ -134,4 +137,16 @@ if SERVER_ENVIRONMENT == 'test':
     }
     BASICAUTH_ALWAYS_ALLOW_URLS = [
         r'^/status_check/$',
+        r'^/api/beta/uploads/$'
     ]
+
+if SERVER_ENVIRONMENT != 'packer-ami-build':
+    DEFAULT_FROM_EMAIL = "pollingstations@democracyclub.org.uk"
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_PORT = 587
+    EMAIL_HOST = 'email-smtp.eu-west-1.amazonaws.com'
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = '{{ vault_smtp_user }}'
+    EMAIL_HOST_PASSWORD = '{{ vault_smtp_password }}'
+
+    GITHUB_API_KEY = '{{ vault_github_api_key }}'
