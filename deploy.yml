@@ -50,7 +50,7 @@
 
   # If we are running via packer (i.e. on an AWS instance with the right permissions) then we can sync the assets to the S3 bucket
   - name: Sync assets to S3 bucket
-    command: "/usr/local/bin/aws s3 sync --cache-control "max-age=365000000, immutable" --metadata-directive REPLACE --acl public-read code/polling_stations/static/ s3://pollingstations-assets2/{{ image_id.stdout }}/ --quiet"
+    command: "/usr/local/bin/aws s3 sync --cache-control 'max-age=365000000:immutable' --metadata-directive REPLACE --acl public-read code/polling_stations/static/ s3://pollingstations-assets2/{{ image_id.stdout }}/ --quiet"
     args:
       chdir: "{{ project_root }}"
     when: not packer
