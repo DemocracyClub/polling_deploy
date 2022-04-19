@@ -1,0 +1,38 @@
+---
+- hosts: all
+  vars_files:
+    - vars.yml
+  gather_facts: true
+  become: true
+  become_user: "{{ project_name }}"
+  tasks:
+
+  - cronvar:
+      name: MAILTO
+      value: "{{ cron_email }}"
+      user: "{{ project_name }}"
+
+  - name: Install import_eoni_from_s3.sh script
+    template:
+      src: "files/import_eoni_from_s3.sh"
+      dest: "~/import_eoni_from_s3.sh"
+      mode: 0744
+
+  - name: Schedule EONI task on reboot
+    cron:
+      name: "Import EONI Reboot"
+      job: "output-on-error ~/import_eoni_from_s3.sh"
+      user: "{{ project_name }}"
+      special_time: reboot
+    become_user: "{{ project_name }}"
+    become: true
+
+- name: Schedule regular EONI import.
+  cron:
+    name: "Nightly EONI import"
+    minute: 0
+    hour: 2
+    job: "output-on-error ~/import_eoni_from_s3.sh"
+    user: "{{ project_name }}"
+  become_user: "{{ project_name }}"
+  become: true
