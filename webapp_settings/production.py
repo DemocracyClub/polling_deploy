@@ -1,3 +1,5 @@
+from dc_logging_client import DCWidePostcodeLoggingClient
+
 from .base import *
 from ec2_tag_conditional.util import InstanceTags
 import os
@@ -150,3 +152,13 @@ if SERVER_ENVIRONMENT != 'packer-ami-build':
     EMAIL_HOST_PASSWORD = '{{ vault_smtp_password }}'
 
     GITHUB_API_KEY = '{{ vault_github_api_key }}'
+
+# Logging client
+FIREHOSE_ACCOUNT_ARN = None
+if SERVER_ENVIRONMENT == 'prod':
+    FIREHOSE_ACCOUNT_ARN = "{{ vault_dc_logging_prod_arn }}"
+if SERVER_ENVIRONMENT == 'test':
+    FIREHOSE_ACCOUNT_ARN = "{{ vault_dc_logging_stage_arn }}"
+
+if FIREHOSE_ACCOUNT_ARN:
+    POSTCODE_LOGGER = DCWidePostcodeLoggingClient(assume_role_arn=FIREHOSE_ACCOUNT_ARN)
