@@ -27,12 +27,12 @@
     become_user: "{{ project_name }}"
     become: true
 
-- name: Schedule regular EONI import.
-  cron:
-    name: "Nightly EONI import"
-    minute: 0
-    hour: 2
-    job: "output-on-error ~/import_eoni_from_s3.sh"
-    user: "{{ project_name }}"
-  become_user: "{{ project_name }}"
-  become: true
+  - name: Schedule regular EONI import.
+    cron:
+      name: "Nightly EONI import"
+      minute: 0
+      hour: 2
+      job: "output-on-error ~/import_eoni_from_s3.sh"
+      user: "{{ project_name }}"
+    become_user: "{{ project_name }}"
+    become: true
