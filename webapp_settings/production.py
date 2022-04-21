@@ -69,9 +69,9 @@ CUSTOM_UA = "DemocracyClub/wheredoivote.co.uk"
 # when you change this, remember to turn sync back on
 # in roles/every_election/tasks/main.yml and
 # deploy to a meatier instance than a t3.micro
-# EE_BASE = 'http://localhost:8000/'
+EE_BASE = 'http://localhost:8000/'
 
-NEXT_CHARISMATIC_ELECTION_DATE = None
+NEXT_CHARISMATIC_ELECTION_DATE = "2022-05-05"
 
 CACHES = {
     "default": {
