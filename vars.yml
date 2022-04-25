@@ -33,6 +33,7 @@ system_packages:
   - libpq-dev
   - libxml2-dev
   - libxslt1-dev
+  - miller
   - nginx
   - nodejs
   - npm
