@@ -21,7 +21,7 @@
   - name: Schedule EONI task on reboot
     cron:
       name: "Import EONI Reboot"
-      job: "output-on-error ~/import_eoni_from_s3.sh"
+      job: "nice -n 10 output-on-error ~/import_eoni_from_s3.sh"
       user: "{{ project_name }}"
       special_time: reboot
     become_user: "{{ project_name }}"
