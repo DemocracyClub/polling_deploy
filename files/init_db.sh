@@ -29,7 +29,6 @@ sleep 30
 
 # dump a bunch of tables in parallel
 pg_dump -d polling_stations -t addressbase_address > /dev/null &
-pg_dump -d polling_stations -t pollingstations_residentialaddress > /dev/null &
 pg_dump -d every_election -t uk_geo_utils_onspd > /dev/null &
 pg_dump -d every_election -t organisations_divisiongeography > /dev/null &
 pg_dump -d every_election -t organisations_organisationgeography > /dev/null &
