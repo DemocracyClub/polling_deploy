@@ -181,5 +181,5 @@
 - import_playbook: init_db.yml
   when: not packer
 
-- import_playbook: import_eoni.yml
-  when: not packer
+#- import_playbook: import_eoni.yml
+#  when: not packer
