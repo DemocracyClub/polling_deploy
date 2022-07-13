@@ -9,42 +9,6 @@
   },
   "builders": [
     {
-      "name": "rest_mode_server",
-      "type": "amazon-ebs",
-      "ssh_keypair_name": "dc_admins",
-      "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
-      "ami_name": "ukpollingstations-rest-mode {{isotime |clean_ami_name }}",
-      "ami_regions":"{{user `regions_to_copy_to` }}",
-      "associate_public_ip_address": true,
-      "iam_instance_profile": "packer-ami-builder",
-      "instance_type":"m4.large",
-      "region": "eu-west-1",
-      "region":"{{user `build_region` }}",
-      "source_ami": "{{user `imported-db_ami_id`}}",
-      "spot_price": "{{ user `max_spot_price`}}",
-      "ssh_username": "ubuntu",
-      "tags": {
-        "application": "{{user `app_name` }}",
-        "build_step": "server",
-        "build_date":"{{isotime}}"
-      },
-      "run_tags": {
-        "application": "{{user `app_name` }}",
-        "Name": "packer-ami-build",
-        "Env": "packer-ami-build"
-      },
-      "run_volume_tags": {
-        "application": "{{user `app_name` }}",
-        "build_step": "server",
-        "build_date":"{{isotime}}"
-      },
-      "snapshot_tags": {
-        "application": "{{user `app_name` }}",
-        "build_step": "server",
-        "build_date":"{{isotime}}"
-      }
-    },
-    {
       "name": "server",
       "type": "amazon-ebs",
       "ssh_keypair_name": "dc_admins",
@@ -53,59 +17,14 @@
       "ami_regions":"{{user `regions_to_copy_to` }}",
       "associate_public_ip_address": true,
       "iam_instance_profile": "packer-ami-builder",
-      "instance_type":"m4.large",
-      "region": "eu-west-1",
-      "region":"{{user `build_region` }}",
-      "source_ami": "{{user `imported-db_ami_id`}}",
-      "spot_price": "{{ user `max_spot_price`}}",
-      "ssh_username": "ubuntu",
-      "tags": {
-        "application": "{{user `app_name` }}",
-        "build_step": "server",
-        "build_date":"{{isotime}}"
-      },
-      "run_tags": {
-        "application": "{{user `app_name` }}",
-        "Name": "packer-ami-build",
-        "Env": "packer-ami-build"
-      },
-      "run_volume_tags": {
-        "application": "{{user `app_name` }}",
-        "build_step": "server",
-        "build_date":"{{isotime}}"
-      },
-      "snapshot_tags": {
-        "application": "{{user `app_name` }}",
-        "build_step": "server",
-        "build_date":"{{isotime}}"
-      }
-    },
-    {
-      "name": "addressbase",
-      "type": "amazon-ebs",
-      "ssh_keypair_name": "dc_admins",
-      "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
-      "ami_name": "addressbase {{isotime |clean_ami_name }}",
-      "associate_public_ip_address": true,
-      "iam_instance_profile": "packer-ami-builder",
-      "instance_type":"m5.8xlarge",
-      "spot_price": "{{ user `max_spot_price`}}",
-      "launch_block_device_mappings": [
-          {
-              "device_name": "/dev/sda1",
-              "delete_on_termination": true,
-              "volume_size": "100",
-              "volume_type": "gp3",
-              "iops": "6000"
-          }
-      ],
-      "region": "eu-west-1",
+      "instance_type":"m4.xlarge",
       "region":"{{user `build_region` }}",
       "source_ami": "{{user `ubuntu_ami_id`}}",
+      "spot_price": "{{ user `max_spot_price`}}",
       "ssh_username": "ubuntu",
       "tags": {
         "application": "{{user `app_name` }}",
-        "build_step": "addressbase",
+        "build_step": "server",
         "build_date":"{{isotime}}"
       },
       "run_tags": {
@@ -115,54 +34,17 @@
       },
       "run_volume_tags": {
         "application": "{{user `app_name` }}",
-        "build_step": "addressbase",
+        "build_step": "server",
         "build_date":"{{isotime}}"
       },
       "snapshot_tags": {
         "application": "{{user `app_name` }}",
-        "build_step": "addressbase",
-        "build_date":"{{isotime}}"
-      }
-    },
-    {
-      "name": "imported-db",
-      "type": "amazon-ebs",
-      "ssh_keypair_name": "dc_admins",
-      "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
-      "ami_name": "imported_data {{isotime |clean_ami_name }} ({{user `election_regex` |clean_ami_name }})",
-      "ami_description": "AMI with Addressbase and Council data pre-imported",
-      "associate_public_ip_address": true,
-      "iam_instance_profile": "packer-ami-builder",
-      "instance_type":"m5.8xlarge",
-      "region": "eu-west-1",
-      "region":"{{user `build_region` }}",
-      "source_ami": "{{user `addressbase_ami_id`}}",
-      "spot_price": "{{user `max_spot_price`}}",
-      "ssh_username": "ubuntu",
-      "tags": {
-        "application": "{{user `app_name` }}",
-        "build_step": "imported-db",
-        "build_date":"{{isotime}}"
-      },
-      "run_tags": {
-        "application": "{{user `app_name` }}",
-        "Name": "packer-ami-build",
-        "Env": "packer-ami-build"
-      },
-      "run_volume_tags": {
-        "application": "{{user `app_name` }}",
-        "build_step": "imported-db",
-        "build_date":"{{isotime}}"
-      },
-      "snapshot_tags": {
-        "application": "{{user `app_name` }}",
-        "build_step": "imported-db",
+        "build_step": "server",
         "build_date":"{{isotime}}"
       }
     }
   ],
   "provisioners": [
-
     { "type": "ansible",
       "only": ["addressbase"],
       "playbook_file": "./provision.yml",

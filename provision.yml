@@ -3,6 +3,9 @@
   # gather facts needs to be off until we've run pre_tasks
   # because gather_facts requires python
   gather_facts: false
+  vars_files:
+    - vars.yml
+  become: true
 
   pre_tasks:
     - name: Stop auto update
@@ -16,25 +19,14 @@
     - name: gather facts
       setup: filter=ansible_*
 
-    - name: Set rest_mode vars
-      set_fact:
-        gunicord_workers: 1
-      when: rest_mode|bool
-
     - name: Set non-rest_mode vars
       set_fact:
         gunicord_workers: "{{ ansible_facts['processor_cores']*2+1 }}"
       when: not rest_mode|bool
 
-  vars_files:
-    - vars.yml
-
-  become: true
   roles:
+    - role: install_initial
     - role: dc_commonscripts
-
-    - role: dc_papertrail
-      papertrail_log_destination: "{{ vault_papertrail_url }}"
 
     - role: postgresql
 
@@ -81,24 +73,6 @@
 
   - name: Create the code directory.
     file: group={{ project_name }} owner={{ project_name }} mode=755 state=directory path={{ project_root }}/code/
-
-  - name: Install required system packages.
-    apt:
-      name: "{{ system_packages }}"
-      state: present
-      update_cache: yes
-
-  - name: Upgrade NPM
-    npm:
-      name: npm
-      global: true
-      version: "6.14.11"
-      state: latest
-
-  - name: Install required Python 3 packages.
-    pip:
-      name: "{{ python3_packages }}"
-      executable: pip3
 
   - name: Change permissions.
     shell: chown -R {{ project_name }}:{{ project_name }} {{ project_root }}

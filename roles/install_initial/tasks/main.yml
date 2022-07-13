@@ -1,0 +1,18 @@
+---
+  - name: Install required system packages.
+    apt:
+      name: "{{ system_packages }}"
+      state: present
+      update_cache: yes
+
+  - name: Upgrade NPM
+    npm:
+      name: npm
+      global: true
+      version: "6.14.11"
+      state: latest
+
+  - name: Install required Python 3 packages.
+    pip:
+      name: "{{ python3_packages }}"
+      executable: pip3
