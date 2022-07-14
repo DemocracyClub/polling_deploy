@@ -30,7 +30,7 @@
 
     - role: postgresql
 
-    - role: every_election
+#     - role: every_election
 
   tasks:
 
