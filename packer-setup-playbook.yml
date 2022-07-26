@@ -6,15 +6,15 @@
 - hosts: 127.0.0.1
   connection: local
   vars:
-    region: "{{ lookup('env', 'AWS_REGION') or 'eu-west-1' }}"
+    region: "{{ lookup('env', 'AWS_REGION') or 'eu-west-2' }}"
   environment:
     AWS_REGION: "{{ region }}"
   tasks:
     # Create a bucket where we put things that packer will pull down at build time
-    - name: Packer assets bucket
-      s3_bucket:
-        name: pollingstations-packer-assets
-      register: s3_bucket
+#    - name: Packer assets bucket
+#      s3_bucket:
+#        name: pollingstations-packer-assets
+#      register: s3_bucket
 
     # Note: We need to add a CORS policy to this bucket but Ansible doesn't support it.
     # The policy we want is:
@@ -27,10 +27,10 @@
     #         <AllowedHeader>Host</AllowedHeader>
     #     </CORSRule>
     # </CORSConfiguration>
-    - name: App assets bucket
-      s3_bucket:
-        name: pollingstations-assets2
-      register: s3_bucket
+#    - name: App assets bucket
+#      s3_bucket:
+#        name: pollingstations-assets2
+#      register: s3_bucket
 
     - iam:
         name: packer-ami-builder
