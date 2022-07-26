@@ -8,16 +8,17 @@ import socket
 
 
 def get_env():
-    tags = InstanceTags()
-    server_env = None
-    if tags['Env']:
-        server_env = tags['Env']
-
-    if server_env not in ['test', 'prod', 'packer-ami-build']:
-        # if we can't work out our environment, don't attempt to guess
-        # fail to bootstrap the application and complain loudly about it
-        raise Exception('Failed to infer a valid environment')
-    return server_env
+    return 'packer-ami-build'
+    # tags = InstanceTags()
+    # server_env = None
+    # if tags['Env']:
+    #     server_env = tags['Env']
+    #
+    # if server_env not in ['test', 'prod', 'packer-ami-build']:
+    #     # if we can't work out our environment, don't attempt to guess
+    #     # fail to bootstrap the application and complain loudly about it
+    #     raise Exception('Failed to infer a valid environment')
+    # return server_env
 
 
 # settings that are the same across all instance types
@@ -117,7 +118,7 @@ if SERVER_ENVIRONMENT in ['prod', 'test']:
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'USER': 'polling_stations',
         'PASSWORD': '{{ vault_logger_prod_password }}',
-        'HOST': 'logger-prod.c0jvejtwfveq.eu-west-1.rds.amazonaws.com',
+        'HOST': '{{ vault_dev_rds_host }}',
         'PORT': '5432',
     }
     if SERVER_ENVIRONMENT == 'prod':

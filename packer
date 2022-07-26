@@ -1,7 +1,5 @@
 #!/bin/bash -e
-# Run with:
-# ./packer database
-# ./packer server
-type="${1?Usage $0 '[addressbase|imported-db|server|rest_mode_server]'}"
-shift;
-/usr/bin/env packer build -var-file=packer-vars.json -var-file=packer-user-vars.json -only="${type}" "$@" packer.json
+## Run with:
+## AWS_PROFILE=... ./packer
+
+/usr/bin/env packer build -var-file=packer-vars.json -var-file=packer-user-vars.json "$@" packer.json

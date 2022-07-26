@@ -1,11 +1,10 @@
 ---
-- hosts: servers
+- hosts: all
   # gather facts needs to be off until we've run pre_tasks
   # because gather_facts requires python
   gather_facts: false
   vars_files:
     - vars.yml
-  become: true
 
   pre_tasks:
     - name: Stop auto update
@@ -24,13 +23,16 @@
         gunicord_workers: "{{ ansible_facts['processor_cores']*2+1 }}"
       when: not rest_mode|bool
 
+
+  become: true
   roles:
-    - role: install_initial
+#     - role: install_initial
     - role: dc_commonscripts
-
     - role: postgresql
-
 #     - role: every_election
+
+  handlers:
+    - import_tasks: handlers.yml
 
   tasks:
 
@@ -74,6 +76,24 @@
   - name: Create the code directory.
     file: group={{ project_name }} owner={{ project_name }} mode=755 state=directory path={{ project_root }}/code/
 
+  - name: Install required system packages.
+    apt:
+      name: "{{ system_packages }}"
+      state: present
+      update_cache: yes
+
+  - name: Upgrade NPM
+    npm:
+      name: npm
+      global: true
+      version: "6.14.11"
+      state: latest
+
+  - name: Install required Python 3 packages.
+    pip:
+      name: "{{ python3_packages }}"
+      executable: pip3
+
   - name: Change permissions.
     shell: chown -R {{ project_name }}:{{ project_name }} {{ project_root }}
 
@@ -88,10 +108,22 @@
     template:
       src: "files/systemd/{{ item }}.service"
       dest: "/etc/systemd/system/{{ project_name }}_{{ item }}.service"
-    with_items: "{{ initfiles }}"
+    with_items: "{{ servicefiles }}"
     notify:
       - reload systemd
       - restart web frontend
+
+  - name: Create the db_replication service log directory
+    file:
+      path: /var/log/db_replication/
+      state: directory
+      mode: 0777
+
+  - name: Create the db_replication service log file
+    file:
+      path: /var/log/db_replication/logs.log
+      state: touch
+      mode: 0777
 
   - name: Install systemd socket scripts.
     template:
@@ -111,19 +143,34 @@
       - reload systemd
       - restart web frontend
 
-  - name: "enable gunicorn"
-    shell: "systemctl enable {{ project_name }}_gunicorn.socket"
+  - name: Install bash scripts
+    template:
+      src: "files/scripts/{{ item }}.sh"
+      dest: "{{ project_root }}/{{ item }}.sh"
+      mode: "u+rwx"
+      owner: "{{ project_name }}"
+    with_items: "{{ bash_scripts }}"
 
-  - name: "start gunicorn"
-    shell: "systemctl start {{ project_name }}_gunicorn.socket"
-    notify:
-      - restart web frontend
-      - restart nginx
+#   - name: "enable gunicorn"
+#     shell: "systemctl enable {{ project_name }}_gunicorn.socket"
+#
+#   - name: "start gunicorn"
+#     shell: "systemctl start {{ project_name }}_gunicorn.socket"
+#     notify:
+#       - restart web frontend
+#       - restart nginx
 
   - name: Set up handy bashrc file
     lineinfile:
       dest: "{{ project_root }}/home/.bashrc"
       line: 'cd && cd ../code && source ../env/bin/activate'
+
+  - name: Set server dirty file
+    file:
+      path: "{{ project_root }}/home/server_dirty"
+      state: touch
+      mode: "u=rw,g=r,o=r"
+      owner: "{{ project_name }}"
 
   - name: Run import councils from EC hourly
     cron:
@@ -140,20 +187,7 @@
       user: "{{ project_name }}"
 
 
-  handlers:
-    - import_tasks: handlers.yml
-
 - import_playbook: deploy.yml
   tags: [deploy]
 
-- import_playbook: addressbase.yml
-  when: packer_addressbase is defined
 
-- import_playbook: import_data.yml
-  when: packer_import_data is defined
-
-- import_playbook: init_db.yml
-  when: not packer
-
-#- import_playbook: import_eoni.yml
-#  when: not packer

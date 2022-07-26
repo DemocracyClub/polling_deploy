@@ -21,6 +21,15 @@
       "region":"{{user `build_region` }}",
       "source_ami": "{{user `ubuntu_ami_id`}}",
       "spot_price": "{{ user `max_spot_price`}}",
+      "launch_block_device_mappings": [
+          {
+              "device_name": "/dev/sda1",
+              "delete_on_termination": true,
+              "volume_size": "100",
+              "volume_type": "gp3",
+              "iops": "6000"
+          }
+      ],
       "ssh_username": "ubuntu",
       "tags": {
         "application": "{{user `app_name` }}",
@@ -41,69 +50,20 @@
         "application": "{{user `app_name` }}",
         "build_step": "server",
         "build_date":"{{isotime}}"
-      }
+      },
+      "ami_users": [
+        "356853674636"
+      ]
     }
   ],
   "provisioners": [
     { "type": "ansible",
-      "only": ["addressbase"],
       "playbook_file": "./provision.yml",
       "groups":["production", "servers", "remote"],
       "extra_arguments": [
         "--extra-vars", "nickname=production packer=1 build_region={{ user `build_region` }} packer_addressbase=1 branch={{user `branch`}}",
         "--extra-vars", "@vault.yml",
         "--extra-vars", "rest_mode=false"
-      ]
-    },
-
-    { "type": "ansible",
-      "only": ["addressbase"],
-      "playbook_file": "./deploy.yml",
-      "groups":["production", "servers", "remote"],
-      "extra_arguments": [
-        "--extra-vars", "nickname=production packer=1 branch={{user `branch`}} vault_logger_prod_password=dummy",
-        "--extra-vars", "@vault.yml",
-        "--extra-vars", "rest_mode=false"
-      ]
-    },
-    {
-      "type": "ansible",
-      "only": ["imported-db"],
-      "playbook_file": "./provision.yml",
-      "groups":["production", "servers", "remote"],
-      "extra_arguments": [
-        "-vv",
-        "--extra-vars", "nickname=production packer=1 packer_import_data=1",
-        "--extra-vars", "election_regex={{ user `election_regex` }} branch={{user `branch`}}",
-        "--extra-vars", "@vault.yml",
-        "--extra-vars", "rest_mode=false"
-      ]
-    },
-    {
-      "type": "ansible",
-      "only": ["server"],
-      "playbook_file": "./provision.yml",
-      "groups":["production", "servers", "remote"],
-      "extra_arguments": [
-        "-vv",
-        "--extra-vars", "nickname=production",
-        "--extra-vars", "branch={{user `branch`}}",
-        "--extra-vars", "@vault.yml",
-        "--extra-vars", "rest_mode=false"
-      ]
-    },
-
-    {
-      "type": "ansible",
-      "only": ["rest_mode_server"],
-      "playbook_file": "./provision.yml",
-      "groups":["production", "servers", "remote"],
-      "extra_arguments": [
-        "-vv",
-        "--extra-vars", "nickname=production",
-        "--extra-vars", "branch={{user `branch`}}",
-        "--extra-vars", "@vault.yml",
-        "--extra-vars", "rest_mode=true"
       ]
     },
     {

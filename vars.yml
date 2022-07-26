@@ -56,8 +56,16 @@ python3_packages:
   - ec2_tag_conditional
   - virtualenv
 
+servicefiles:
+  - gunicorn
+  - db_replication
+
 initfiles:
   - gunicorn
+
+bash_scripts:
+  - setup_db_replication
+  - remove_db_replication
 
 s3_years:
   - 2022
