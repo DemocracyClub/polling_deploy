@@ -5,11 +5,14 @@ set -xeEo pipefail
 echo "" > /var/log/db_replication/logs.log
 
 # Set env variables
-USER=polling_stations
-DB=polling_stations
-RDS_DB_PASSWORD=dvov7x9k79
-RDS_DB_HOST=wdiv-test.cl0ejuxihujo.eu-west-2.rds.amazonaws.com
-RDS_DB_NAME=polling_stations_20220505
+# write the env file
+/var/www/polling_stations/env/bin/python /var/www/polling_stations/code/deployscripts/write_envfile.py
+# ensure the file exists - if not script exits with error
+cat /var/www/polling_stations/code/.env | xargs
+# now load .env file to get RDS secrets
+export $(cat /var/www/polling_stations/code/.env | xargs)
+USER={{ project_name }}
+DB={{ project_name }}
 INSTANCE_ID=`curl http://instance-data/latest/meta-data/instance-id`
 SUBSCRIPTION=${USER}_${INSTANCE_ID:2}
 

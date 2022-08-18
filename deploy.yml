@@ -25,10 +25,10 @@
     notify:
       - restart web frontend
 
-  - name: Upload configuration.
-    template: src=webapp_settings/{{ nickname }}.py dest={{ project_root }}/code/{{ app_name }}/settings/local.py
-    notify:
-      - restart web frontend
+#   - name: Upload configuration.
+#     template: src=webapp_settings/{{ nickname }}.py dest={{ project_root }}/code/{{ app_name }}/settings/local.py
+#     notify:
+#       - restart web frontend
 
   - name: Upgrade the virtualenv.
     pip:
@@ -39,31 +39,31 @@
   - name: Install front-end dependencies.
     npm: path={{ project_root }}/code
 
-  - name: Migrate Django database.
-    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py migrate --noinput"
+#   - name: Migrate Django database.
+#     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py migrate --noinput"
 
-  - name: Generate Django media.
-    command: "./env/bin/python code/manage.py collectstatic --noinput --clear"
-    args:
-      chdir: "{{ project_root }}"
-    when: not packer
+#   - name: Generate Django media.
+#     command: "./env/bin/python code/manage.py collectstatic --noinput --clear"
+#     args:
+#       chdir: "{{ project_root }}"
+#     when: not packer
 
   # If we are running via packer (i.e. on an AWS instance with the right permissions) then we can sync the assets to the S3 bucket
-  - name: Sync assets to S3 bucket
-    command: "/usr/local/bin/aws s3 sync --cache-control 'max-age=365000000:immutable' --metadata-directive REPLACE --acl public-read code/polling_stations/static/ s3://pollingstations-assets2/{{ image_id.stdout }}/ --quiet"
-    args:
-      chdir: "{{ project_root }}"
-    when: not packer
+#   - name: Sync assets to S3 bucket
+#     command: "/usr/local/bin/aws s3 sync --cache-control 'max-age=365000000:immutable' --metadata-directive REPLACE --acl public-read code/polling_stations/static/ s3://pollingstations-assets2/{{ image_id.stdout }}/ --quiet"
+#     args:
+#       chdir: "{{ project_root }}"
+#     when: not packer
 
-  - name: Compile all translations from .po files into .mo files
-    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py compilemessages"
-    when: not packer
+#   - name: Compile all translations from .po files into .mo files
+#     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py compilemessages"
+#     when: not packer
 
-  - name: Apply Misc Fixes
-    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py misc_fixes"
-    args:
-      chdir: "{{ project_root }}/code/"
-    when: not packer
+#   - name: Apply Misc Fixes
+#     shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py misc_fixes"
+#     args:
+#       chdir: "{{ project_root }}/code/"
+#     when: not packer
 
 
   handlers:

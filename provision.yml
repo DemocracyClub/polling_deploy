@@ -94,6 +94,10 @@
       name: "{{ python3_packages }}"
       executable: pip3
 
+
+  - name: Install CodeDeploy agent
+    raw: cd /home/ubuntu && sudo wget https://aws-codedeploy-eu-west-2.s3.eu-west-2.amazonaws.com/latest/install && sudo chmod +x ./install && sudo ./install auto
+
   - name: Change permissions.
     shell: chown -R {{ project_name }}:{{ project_name }} {{ project_root }}
 
@@ -150,15 +154,6 @@
       mode: "u+rwx"
       owner: "{{ project_name }}"
     with_items: "{{ bash_scripts }}"
-
-#   - name: "enable gunicorn"
-#     shell: "systemctl enable {{ project_name }}_gunicorn.socket"
-#
-#   - name: "start gunicorn"
-#     shell: "systemctl start {{ project_name }}_gunicorn.socket"
-#     notify:
-#       - restart web frontend
-#       - restart nginx
 
   - name: Set up handy bashrc file
     lineinfile:
