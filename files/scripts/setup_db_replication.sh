@@ -21,11 +21,15 @@ dropdb --if-exists $DB -U $USER
 createdb $DB -U $USER
 psql $DB -U $USER -c 'create extension postgis;'
 
+
+# Activate Virtual env
+source /var/www/polling_stations/env/bin/activate
+
 # Print current settings
 /var/www/polling_stations/code/manage.py diffsettings --all
 
 # Migrate db - this builds the schema before syncing
-source /var/www/polling_stations/env/bin/activate && /var/www/polling_stations/code/manage.py migrate
+IGNORE_ROUTERS=True /var/www/polling_stations/code/manage.py migrate
 
 # Truncate some tables that are populated by the above steps
 psql $DB -U $USER -c 'TRUNCATE "spatial_ref_sys", "auth_permission", "django_migrations", "django_content_type", "django_site", "pollingstations_customfinder" RESTART IDENTITY CASCADE;'
