@@ -59,6 +59,7 @@ python3_packages:
 servicefiles:
   - gunicorn
   - db_replication
+  - cloudwatch
 
 initfiles:
   - gunicorn

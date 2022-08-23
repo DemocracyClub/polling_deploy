@@ -94,9 +94,19 @@
       name: "{{ python3_packages }}"
       executable: pip3
 
-
   - name: Install CodeDeploy agent
     raw: cd /home/ubuntu && sudo wget https://aws-codedeploy-eu-west-2.s3.eu-west-2.amazonaws.com/latest/install && sudo chmod +x ./install && sudo ./install auto
+
+  - name: Install Cloudwatch agent
+    raw: mkdir /tmp/cloudwatch-logs && cd /tmp/cloudwatch-logs && wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb && sudo dpkg -i -E ./amazon-cloudwatch-agent.deb
+
+  - name: Install Cloudwatch config file
+    template:
+      src: "files/conf/cloudwatch.json"
+      dest: /root/.cloudwatch.json
+      group: root
+      owner: root
+      mode: 0644
 
   - name: Change permissions.
     shell: chown -R {{ project_name }}:{{ project_name }} {{ project_root }}

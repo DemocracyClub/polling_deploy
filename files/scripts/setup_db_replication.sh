@@ -16,10 +16,14 @@ DB={{ project_name }}
 INSTANCE_ID=`curl http://instance-data/latest/meta-data/instance-id`
 SUBSCRIPTION=${USER}_${INSTANCE_ID:2}
 
+
+
 dropdb --if-exists $DB -U $USER
 createdb $DB -U $USER
 psql $DB -U $USER -c 'create extension postgis;'
 source /var/www/polling_stations/env/bin/activate && /var/www/polling_stations/code/manage.py migrate
+/var/www/polling_stations/code/manage.py diffsettings --all
+
 psql $DB -U $USER -c 'TRUNCATE "spatial_ref_sys", "auth_permission", "django_migrations", "django_content_type", "django_site", "pollingstations_customfinder" RESTART IDENTITY CASCADE;'
 psql $DB -U $USER -c 'alter table addressbase_address drop constraint addressbase_address_pkey cascade;'
 psql $DB -U $USER -c 'alter table addressbase_uprntocouncil drop constraint addressbase_uprntocouncil_pkey cascade;'
