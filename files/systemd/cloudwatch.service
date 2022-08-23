@@ -1,6 +1,6 @@
 [Unit]
 Description=Starts the cloudwatch agent with our config file
-Before={{ project_name}}_db_replication.service
+Before={{ project_name }}_db_replication.service
 
 [Service]
 User=root

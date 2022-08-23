@@ -157,6 +157,9 @@
       - reload systemd
       - restart web frontend
 
+  - name: "enable cloudwatch"
+    shell: "systemctl enable {{ project_name }}_cloudwatch.service"
+
   - name: Install bash scripts
     template:
       src: "files/scripts/{{ item }}.sh"
