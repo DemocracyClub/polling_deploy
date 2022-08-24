@@ -10,12 +10,12 @@
           {
             "file_path": "/var/log/db_replication/logs.log",
             "log_group_name": "/db_replication/",
-            "log_stream_name": "logs",
+            "log_stream_name": "db_replication_logs",
             "timezone": "UTC"
           },
           {
             "file_path": "/var/log/syslog",
-            "log_group_name": "/var/log/",
+            "log_group_name": "/var/log/syslog",
             "log_stream_name": "syslog",
             "timezone": "UTC"
           },
@@ -24,7 +24,12 @@
             "log_group_name": "/codedeploy/",
             "log_stream_name": "codedeploy-agent-deployments.log",
             "timezone": "UTC"
-          }
+          },
+          {
+            "file_path": "/var/log/postgresql/postgresql-10-main.log",
+            "log_group_name": "/var/log/postgresql",
+            "log_stream_name": "postgresql-log",
+            "timezone": "UTC"          }
         ]
       }
     },

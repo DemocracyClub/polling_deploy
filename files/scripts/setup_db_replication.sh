@@ -25,9 +25,6 @@ psql $DB -U $USER -c 'create extension postgis;'
 # Activate Virtual env
 source /var/www/polling_stations/env/bin/activate
 
-# Print current settings
-/var/www/polling_stations/code/manage.py diffsettings --all
-
 # Migrate db - this builds the schema before syncing
 IGNORE_ROUTERS=True /var/www/polling_stations/code/manage.py migrate
 
@@ -65,4 +62,4 @@ psql $DB -U $USER -c 'CREATE INDEX addressbase_uprntocouncil_advance_voting_stat
 psql $DB -U $USER -c 'CREATE INDEX addressbase_uprntocouncil_uprn_7abf1568_like ON public.addressbase_uprntocouncil USING btree (uprn varchar_pattern_ops);'
 psql $DB -U $USER -c 'CREATE INDEX lookup_lad_idx ON public.addressbase_uprntocouncil USING btree (lad);'
 
-rm -f ~/server_dirty
+touch ~/clean
