@@ -2,7 +2,7 @@
   "description": "Builds UK Polling Station golden image",
   "variables": {
     "build_region": "eu-west-2",
-    "branch": "master",
+    "branch": "cdk",
     "app_name": "wdiv",
     "ssh_private_key_file": null,
     "election_regex": null
