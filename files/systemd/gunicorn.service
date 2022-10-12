@@ -11,6 +11,7 @@ RuntimeDirectory=gunicorn
 WorkingDirectory={{project_root}}/code/
 
 Environment="PATH={{project_root}}/env/bin:{{ansible_env.PATH}}"
+EnvironmentFile={{project_root}}/code/.env
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
 PrivateTmp=true
