@@ -5,8 +5,8 @@
   apt:
     name:
       - postgresql
-      - postgresql-10-postgis-2.4
-      - postgresql-client-10
+      - postgresql-14-postgis-3
+      - postgresql-client-14
       - postgresql-contrib
       - postgresql-server-dev-all
       - python3-psycopg2
@@ -16,7 +16,7 @@
 
 - name: Optimize Postgres for DB import
   lineinfile:
-    dest: /etc/postgresql/10/main/postgresql.conf
+    dest: /etc/postgresql/14/main/postgresql.conf
     line: "{{ item }}"
     state: present
   with_items:
@@ -30,7 +30,7 @@
 
 - name: Remove write heavy Postgres config
   lineinfile:
-    dest: /etc/postgresql/10/main/postgresql.conf
+    dest: /etc/postgresql/14/main/postgresql.conf
     line: "{{ item }}"
     state: absent
   with_items:
@@ -44,7 +44,7 @@
 
 - name: Add read heavy Postgres config
   lineinfile:
-    dest: /etc/postgresql/10/main/postgresql.conf
+    dest: /etc/postgresql/14/main/postgresql.conf
     line: "{{ item }}"
     state: present
   with_items:
@@ -58,7 +58,7 @@
 
 - name: Add logging for slow queries
   lineinfile:
-    dest: /etc/postgresql/10/main/postgresql.conf
+    dest: /etc/postgresql/14/main/postgresql.conf
     line: "{{ item }}"
     state: present
   with_items:
@@ -68,7 +68,7 @@
   when: not packer
 
 - name: Install postgres_hba configuration file.
-  template: src=files/conf/pg_hba.conf dest=/etc/postgresql/10/main/pg_hba.conf
+  template: src=files/conf/pg_hba.conf dest=/etc/postgresql/14/main/pg_hba.conf
   notify: restart postgres
 
 - name: restart postgres

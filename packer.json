@@ -11,7 +11,7 @@
     {
       "name": "rest_mode_server",
       "type": "amazon-ebs",
-      "ssh_keypair_name": "dc_admins",
+      "ssh_keypair_name": "wdiv-legacy-20221101",
       "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
       "ami_name": "ukpollingstations-rest-mode {{isotime |clean_ami_name }}",
       "ami_regions":"{{user `regions_to_copy_to` }}",
@@ -47,7 +47,7 @@
     {
       "name": "server",
       "type": "amazon-ebs",
-      "ssh_keypair_name": "dc_admins",
+      "ssh_keypair_name": "wdiv-legacy-20221101",
       "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
       "ami_name": "ukpollingstations {{isotime |clean_ami_name }}",
       "ami_regions":"{{user `regions_to_copy_to` }}",
@@ -83,7 +83,7 @@
     {
       "name": "addressbase",
       "type": "amazon-ebs",
-      "ssh_keypair_name": "dc_admins",
+      "ssh_keypair_name": "wdiv-legacy-20221101",
       "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
       "ami_name": "addressbase {{isotime |clean_ami_name }}",
       "associate_public_ip_address": true,
@@ -127,7 +127,7 @@
     {
       "name": "imported-db",
       "type": "amazon-ebs",
-      "ssh_keypair_name": "dc_admins",
+      "ssh_keypair_name": "wdiv-legacy-20221101",
       "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
       "ami_name": "imported_data {{isotime |clean_ami_name }} ({{user `election_regex` |clean_ami_name }})",
       "ami_description": "AMI with Addressbase and Council data pre-imported",

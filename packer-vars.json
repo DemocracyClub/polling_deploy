@@ -1,7 +1,7 @@
 {
-  "ubuntu_ami_id": "ami-0ce48dd7b483b8402",
-  "addressbase_ami_id": "ami-0bdccd3d8f3671d7d",
-  "imported-db_ami_id": "ami-0fd25fc84859ea8f9",
+  "ubuntu_ami_id": "ami-0fabdb639e489a381",
+  "addressbase_ami_id": "ami-04fe920283a704e4b",
+  "imported-db_ami_id": "ami-0fccf66084ac0813b",
   "election_regex": ".*2022-08-.*"
 }
 
