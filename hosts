@@ -5,4 +5,4 @@ production
 production
 
 [production]
-polling_tmp nickname=production vm=0 branch=master domain=wheredoivote.co.uk
+polling_tmp nickname=production vm=0 branch=hotfix/base-template domain=wheredoivote.co.uk

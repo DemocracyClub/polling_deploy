@@ -11,7 +11,7 @@ addressbase_file_name: ABFLGB_CSV_2022-06-29_cleaned.csv
 onspd_url: https://ons-cache.s3.amazonaws.com/onspd/ONSPD_MAY_2022_UK.zip
 alt_boundaries_url: https://ons-cache.s3.amazonaws.com/Local_Authority_Districts_December_2021_UK_BFE.geojson
 packer: 0
-branch: master
+branch: hotfix/base-template
 nickname: production
 cron_email: developers@democracyclub.org.uk
 domains:
