@@ -13,10 +13,7 @@
     state: present
     update_cache: yes
 
-- name: Install required Python 2 packages.
-  pip:
-    name: "{{ python2_packages }}"
-    executable: pip2
+
 
 - name: Install required Python 3 packages.
   pip:
