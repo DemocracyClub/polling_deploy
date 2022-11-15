@@ -32,7 +32,7 @@
   environment:
     AWS_REGION: "{{ region }}"
   tasks:
-    - ec2_vpc_subnet_facts:
+    - ec2_vpc_subnet_info:
         filters:
           vpc-id: "{{ vpc_id }}"
       register: subnets

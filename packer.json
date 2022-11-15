@@ -167,6 +167,7 @@
       "only": ["addressbase"],
       "playbook_file": "./provision.yml",
       "groups":["production", "servers", "remote"],
+      "ansible_env_vars": ["ANSIBLE_SSH_ARGS='-o PubkeyAcceptedKeyTypes=+ssh-rsa -o HostkeyAlgorithms=+ssh-rsa'" ],
       "extra_arguments": [
         "--extra-vars", "nickname=production packer=1 build_region={{ user `build_region` }} packer_addressbase=1 branch={{user `branch`}}",
         "--extra-vars", "@vault.yml",
@@ -178,6 +179,7 @@
       "only": ["addressbase"],
       "playbook_file": "./deploy.yml",
       "groups":["production", "servers", "remote"],
+      "ansible_env_vars": ["ANSIBLE_SSH_ARGS='-o PubkeyAcceptedKeyTypes=+ssh-rsa -o HostkeyAlgorithms=+ssh-rsa'" ],
       "extra_arguments": [
         "--extra-vars", "nickname=production packer=1 branch={{user `branch`}} vault_logger_prod_password=dummy",
         "--extra-vars", "@vault.yml",
@@ -189,6 +191,7 @@
       "only": ["imported-db"],
       "playbook_file": "./provision.yml",
       "groups":["production", "servers", "remote"],
+      "ansible_env_vars": ["ANSIBLE_SSH_ARGS='-o PubkeyAcceptedKeyTypes=+ssh-rsa -o HostkeyAlgorithms=+ssh-rsa'" ],
       "extra_arguments": [
         "-vv",
         "--extra-vars", "nickname=production packer=1 packer_import_data=1",
@@ -202,6 +205,7 @@
       "only": ["server"],
       "playbook_file": "./provision.yml",
       "groups":["production", "servers", "remote"],
+      "ansible_env_vars": ["ANSIBLE_SSH_ARGS='-o PubkeyAcceptedKeyTypes=+ssh-rsa -o HostkeyAlgorithms=+ssh-rsa'" ],
       "extra_arguments": [
         "-vv",
         "--extra-vars", "nickname=production",
@@ -216,6 +220,7 @@
       "only": ["rest_mode_server"],
       "playbook_file": "./provision.yml",
       "groups":["production", "servers", "remote"],
+      "ansible_env_vars": ["ANSIBLE_SSH_ARGS='-o PubkeyAcceptedKeyTypes=+ssh-rsa -o HostkeyAlgorithms=+ssh-rsa'" ],
       "extra_arguments": [
         "-vv",
         "--extra-vars", "nickname=production",
