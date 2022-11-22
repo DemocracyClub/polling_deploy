@@ -7,9 +7,9 @@ app_name: polling_stations
 django_media_path: polling_stations
 django_media_root: /var/www/polling_stations-media/media_root
 project_repo: https://github.com/DemocracyClub/UK-Polling-Stations.git
-addressbase_file_name: ABFLGB_CSV_2022-06-29_cleaned.csv
-onspd_url: https://ons-cache.s3.amazonaws.com/onspd/ONSPD_MAY_2022_UK.zip
-alt_boundaries_url: https://ons-cache.s3.amazonaws.com/Local_Authority_Districts_December_2021_UK_BFE.geojson
+addressbase_file_name: ABFLGB_CSV_2022-09-22_cleaned.csv
+onspd_url: https://ons-cache.s3.amazonaws.com/onspd/ONSPD_AUG_2022_UK.zip
+alt_boundaries_url: https://ons-cache.s3.amazonaws.com/Local_Authority_Districts_May_2022_UK_BFE_V3.geojson
 packer: 0
 branch: master
 nickname: production
@@ -31,6 +31,7 @@ system_packages:
   - libffi-dev
   - libjpeg-dev
   - libpq-dev
+  - libspatialindex6
   - libxml2-dev
   - libxslt1-dev
   - miller
@@ -39,22 +40,22 @@ system_packages:
   - npm
   - opencv-data
   - postfix
-  - python-pip
   - python3-dev
   - python3-pip
   - redis-server
   - unzip
 
-# Install s3 with pip as a python 2 dependency because we hit this bug:
-# https://github.com/s3tools/s3cmd/issues/930
-# and we want to authenticate using iam role instead of key
-python2_packages:
-  - s3cmd
+# # Install s3 with pip as a python 2 dependency because we hit this bug:
+# # https://github.com/s3tools/s3cmd/issues/930
+# # and we want to authenticate using iam role instead of key
+# python2_packages:
+#   - s3cmd
 
 python3_packages:
   - awscli
   - ec2_tag_conditional
   - virtualenv
+  - s3cmd
 
 initfiles:
   - gunicorn

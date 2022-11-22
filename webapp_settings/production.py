@@ -54,7 +54,6 @@ if SERVER_ENVIRONMENT != 'packer-ami-build':
     DATABASE_ROUTERS = ['polling_stations.db_routers.LoggerRouter',]
 
 
-STATIC_URL = 'https://s3-eu-west-1.amazonaws.com/pollingstations-assets2/{{ image_id.stdout }}/'
 PIPELINE['SASS_BINARY'] = "/var/www/polling_stations/env/bin/sassc"
 
 GOOGLE_API_KEYS = [

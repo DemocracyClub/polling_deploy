@@ -20,5 +20,5 @@ echo $FILENAME
 s3cmd get --skip-existing $LATEST_FILE $SRCDIR --region=eu-west-2
 dropdb -U $USER $DB
 createdb -U $USER $DB
-pg_restore -j 2 -U $USER  -d $DB  $SRCDIR/$FILENAME
+pg_restore --clean --if-exists -j 2 -U $USER  -d $DB  $SRCDIR/$FILENAME
 rm $SRCDIR/*
